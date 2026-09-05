@@ -75,9 +75,8 @@ function render() {
   }
   if (map && bounds.length) map.fitBounds(bounds, {padding:[28,28], maxZoom:15});
 
-  const list = filtered.slice(0,160);
+  const list = filtered;
   els.list.innerHTML = list.length ? list.map(e => `<article class="event" data-venue="${esc(e.venue)}" tabindex="0"><strong>${esc(e.title)}</strong><div class="venue">${esc(e.venue)}</div><div class="bottom"><time>${esc(e.time)}</time>${e.category?`<span class="tag">${esc(e.category)}</span>`:''}</div></article>`).join('') : '<div class="empty">Nessun evento con questi filtri.</div>';
-  if (filtered.length > list.length) els.list.insertAdjacentHTML('beforeend', `<div class="empty">Mostrati i primi ${list.length} risultati.</div>`);
 
   els.list.querySelectorAll('.event').forEach(card => {
     const open = () => {
