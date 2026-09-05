@@ -8,7 +8,7 @@ on:
       - 'scripts/scrape.mjs'
       - 'scripts/enrich-venues.mjs'
       - 'scripts/enrich-descriptions.mjs'
-      - 'scripts/translate-it.py'
+      - 'scripts/translate-it-via-en.py'
       - 'scripts/apply-italian-ui.mjs'
       - 'package.json'
       - '.github/workflows/refresh-data.yml'
@@ -36,7 +36,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface
-          key: hf-opus-de-en-it-v1
+          key: hf-de-en-big-en-it-v1
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - run: npm run scrape
@@ -47,19 +47,19 @@ jobs:
           python -m pip install --disable-pip-version-check --index-url https://download.pytorch.org/whl/cpu torch
           python -m pip install --disable-pip-version-check 'transformers<5' sentencepiece sacremoses langdetect
       - name: Translate programme to Italian
-        run: python scripts/translate-it.py
+        run: python scripts/translate-it-via-en.py
       - name: Apply Italian UI fields
         run: node scripts/apply-italian-ui.mjs
       - name: Commit refreshed data
         run: |
-          if git diff --quiet -- data/events.json data/translations-it.json app.js index.html; then
+          if git diff --quiet -- data/events.json data/translations-it-via-en.json app.js index.html; then
             echo "No data or localization changes"
             exit 0
           fi
           git config user.name "mo-mew"
           git config user.email "mo-mew@users.noreply.github.com"
-          git add data/events.json data/translations-it.json app.js index.html
-          git commit -m "Localize programme in Italian"
+          git add data/events.json data/translations-it-via-en.json app.js index.html
+          git commit -m "Improve Italian programme translation"
           git fetch origin main
           git rebase origin/main
           git push origin main
