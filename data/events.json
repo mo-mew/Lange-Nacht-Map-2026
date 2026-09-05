@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-09-05T16:16:08.135Z",
+  "generatedAt": "2026-09-05T16:24:49.978Z",
   "source": "https://langenacht-zuerich.ch/programm?culture=de-ch&limit=1000&skip=0",
   "eventDate": "2026-09-05",
   "events": [
     {
       "id": "e9",
       "title": "Aug in Aug mit Chagall im Fraumünster",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Fraumünster",
       "category": null,
       "time": "18–18:20 Uhr",
       "start": "18:00",
@@ -18,7 +18,7 @@
     {
       "id": "e46",
       "title": "Hoch hinauf auf St. Peter",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · St. Peter",
       "category": null,
       "time": "18–18:45 Uhr",
       "start": "18:00",
@@ -30,7 +30,7 @@
     {
       "id": "e49",
       "title": "Kartoffelstempeln in der Wasserkirche",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Wasserkirche",
       "category": null,
       "time": "18–20 Uhr",
       "start": "18:00",
@@ -42,7 +42,7 @@
     {
       "id": "e59",
       "title": "Mit Jona im Bauch des Grossmünsters",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "18–18:30 Uhr",
       "start": "18:00",
@@ -54,7 +54,7 @@
     {
       "id": "e85",
       "title": "Zu den Glocken des Grossmünsters",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "18–18:25 Uhr",
       "start": "18:00",
@@ -1062,7 +1062,7 @@
     {
       "id": "e89",
       "title": "Die 7 Todsünden im Grossmünster: Völlerei",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "18:15–18:30 Uhr",
       "start": "18:15",
@@ -1158,7 +1158,7 @@
     {
       "id": "e98",
       "title": "Bisschen Bibel im Fraumünster",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Fraumünster",
       "category": null,
       "time": "18:30–18:50 Uhr",
       "start": "18:30",
@@ -1170,7 +1170,7 @@
     {
       "id": "e107",
       "title": "Hoch hinauf auf St. Peter",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · St. Peter",
       "category": null,
       "time": "18:30–19:15 Uhr",
       "start": "18:30",
@@ -1182,7 +1182,7 @@
     {
       "id": "e122",
       "title": "Zu den Glocken des Grossmünsters",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "18:30–18:55 Uhr",
       "start": "18:30",
@@ -1482,7 +1482,7 @@
     {
       "id": "e126",
       "title": "Die 7 Todsünden im Grossmünster: Überdruss",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "18:45–19 Uhr",
       "start": "18:45",
@@ -1494,7 +1494,7 @@
     {
       "id": "e129",
       "title": "Mit Jona im Bauch des Grossmünsters",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "18:45–19:15 Uhr",
       "start": "18:45",
@@ -1590,7 +1590,7 @@
     {
       "id": "e154",
       "title": "Hoch hinauf auf St. Peter",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · St. Peter",
       "category": null,
       "time": "19–19:45 Uhr",
       "start": "19:00",
@@ -1602,7 +1602,7 @@
     {
       "id": "e171",
       "title": "Wer war Katharina? Auf Spurensuche im Fraumünster",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Fraumünster",
       "category": null,
       "time": "19–19:20 Uhr",
       "start": "19:00",
@@ -1614,7 +1614,7 @@
     {
       "id": "e172",
       "title": "Zu den Glocken des Grossmünsters",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "19–19:25 Uhr",
       "start": "19:00",
@@ -2106,7 +2106,7 @@
     {
       "id": "e177",
       "title": "Die 7 Todsünden im Grossmünster: Ausschweifung",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "19:15–19:30 Uhr",
       "start": "19:15",
@@ -2202,7 +2202,7 @@
     {
       "id": "e188",
       "title": "Crashkurs Reformation in der Fraumünster-Krypta",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Fraumünster",
       "category": null,
       "time": "19:30–19:50 Uhr",
       "start": "19:30",
@@ -2214,7 +2214,7 @@
     {
       "id": "e195",
       "title": "Hoch hinauf auf St. Peter",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · St. Peter",
       "category": null,
       "time": "19:30–20:15 Uhr",
       "start": "19:30",
@@ -2226,7 +2226,7 @@
     {
       "id": "e200",
       "title": "Mit Jona im Bauch des Grossmünsters",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "19:30–20 Uhr",
       "start": "19:30",
@@ -2238,7 +2238,7 @@
     {
       "id": "e208",
       "title": "Zu den Glocken des Grossmünsters",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "19:30–19:55 Uhr",
       "start": "19:30",
@@ -2514,7 +2514,7 @@
     {
       "id": "e210",
       "title": "Die 7 Todsünden im Grossmünster: Habgier",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "19:45–20 Uhr",
       "start": "19:45",
@@ -2598,7 +2598,7 @@
     {
       "id": "e219",
       "title": "Aug in Aug mit Chagall im Fraumünster",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Fraumünster",
       "category": null,
       "time": "20–20:20 Uhr",
       "start": "20:00",
@@ -2610,7 +2610,7 @@
     {
       "id": "e235",
       "title": "Hoch hinauf auf St. Peter",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · St. Peter",
       "category": null,
       "time": "20–20:45 Uhr",
       "start": "20:00",
@@ -2622,7 +2622,7 @@
     {
       "id": "e254",
       "title": "Zu den Glocken des Grossmünsters",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "20–20:25 Uhr",
       "start": "20:00",
@@ -3102,7 +3102,7 @@
     {
       "id": "e259",
       "title": "Die 7 Todsünden im Grossmünster: Neid",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "20:15–20:30 Uhr",
       "start": "20:15",
@@ -3114,7 +3114,7 @@
     {
       "id": "e264",
       "title": "Mit Jona im Bauch des Grossmünsters",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "20:15–20:45 Uhr",
       "start": "20:15",
@@ -3198,7 +3198,7 @@
     {
       "id": "e270",
       "title": "Bisschen Bibel im Fraumünster",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Fraumünster",
       "category": null,
       "time": "20:30–20:50 Uhr",
       "start": "20:30",
@@ -3210,7 +3210,7 @@
     {
       "id": "e278",
       "title": "Hoch hinauf auf St. Peter",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · St. Peter",
       "category": null,
       "time": "20:30–21:15 Uhr",
       "start": "20:30",
@@ -3222,7 +3222,7 @@
     {
       "id": "e293",
       "title": "Zu den Glocken des Grossmünsters",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "20:30–20:55 Uhr",
       "start": "20:30",
@@ -3546,7 +3546,7 @@
     {
       "id": "e298",
       "title": "Die 7 Todsünden im Grossmünster: Zorn",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "20:45–21 Uhr",
       "start": "20:45",
@@ -3630,7 +3630,7 @@
     {
       "id": "e335",
       "title": "Wer war Katharina? Auf Spurensuche im Fraumünster",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Fraumünster",
       "category": null,
       "time": "21–21:20 Uhr",
       "start": "21:00",
@@ -3642,7 +3642,7 @@
     {
       "id": "e337",
       "title": "Zu den Glocken des Grossmünsters",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "21–21:25 Uhr",
       "start": "21:00",
@@ -4074,7 +4074,7 @@
     {
       "id": "e341",
       "title": "Die 7 Todsünden im Grossmünster: Hochmut",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "21:15–21:30 Uhr",
       "start": "21:15",
@@ -4530,7 +4530,7 @@
     {
       "id": "e383",
       "title": "Die grösste Jukebox von Zürich im Fraumünster",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Fraumünster",
       "category": null,
       "time": "22–22:20 Uhr",
       "start": "22:00",
@@ -4542,7 +4542,7 @@
     {
       "id": "e392",
       "title": "Hoch hinauf auf St. Peter",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · St. Peter",
       "category": null,
       "time": "22–22:45 Uhr",
       "start": "22:00",
@@ -4554,7 +4554,7 @@
     {
       "id": "e395",
       "title": "Meditatives Grossmünster",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "22–22:55 Uhr",
       "start": "22:00",
@@ -5046,7 +5046,7 @@
     {
       "id": "e424",
       "title": "Die grösste Jukebox von Zürich im Fraumünster",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Fraumünster",
       "category": null,
       "time": "22:30–22:50 Uhr",
       "start": "22:30",
@@ -5058,7 +5058,7 @@
     {
       "id": "e429",
       "title": "Hoch hinauf auf St. Peter",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · St. Peter",
       "category": null,
       "time": "22:30–23:15 Uhr",
       "start": "22:30",
@@ -5346,7 +5346,7 @@
     {
       "id": "e452",
       "title": "Die grösste Jukebox von Zürich im Fraumünster",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Fraumünster",
       "category": null,
       "time": "23–23:20 Uhr",
       "start": "23:00",
@@ -5358,7 +5358,7 @@
     {
       "id": "e463",
       "title": "Hoch hinauf auf St. Peter",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · St. Peter",
       "category": null,
       "time": "23–23:45 Uhr",
       "start": "23:00",
@@ -5370,7 +5370,7 @@
     {
       "id": "e465",
       "title": "Meditatives Grossmünster",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Grossmünster",
       "category": null,
       "time": "23–23:55 Uhr",
       "start": "23:00",
@@ -5790,7 +5790,7 @@
     {
       "id": "e487",
       "title": "Die grösste Jukebox von Zürich im Fraumünster",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · Fraumünster",
       "category": null,
       "time": "23:30–23:50 Uhr",
       "start": "23:30",
@@ -5802,7 +5802,7 @@
     {
       "id": "e493",
       "title": "Hoch hinauf auf St. Peter",
-      "venue": "Altstadtkirchen",
+      "venue": "Altstadtkirchen · St. Peter",
       "category": null,
       "time": "23:30–00:15 Uhr",
       "start": "23:30",
@@ -6426,22 +6426,40 @@
   ],
   "venues": [
     {
-      "name": "Altstadtkirchen",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "name": "Altstadtkirchen · Fraumünster",
+      "lat": 47.3697153,
+      "lng": 8.5411996,
+      "displayName": "Fraumünster, 2, Münsterhof, Lindenhof, Altstadt, Zürich, Bezirk Zürich, Zürich, 8001, Schweiz/Suisse/Svizzera/Svizra"
+    },
+    {
+      "name": "Altstadtkirchen · St. Peter",
+      "lat": 47.3710833,
+      "lng": 8.5407265,
+      "displayName": "St. Peter, 1, St. Peterhofstatt, Lindenhof, Altstadt, Zürich, Bezirk Zürich, Zürich, 8001, Schweiz/Suisse/Svizzera/Svizra"
+    },
+    {
+      "name": "Altstadtkirchen · Wasserkirche",
+      "lat": 47.3698494,
+      "lng": 8.5430379,
+      "displayName": "31, Limmatquai, Rathaus, Altstadt, Zürich, Bezirk Zürich, Zürich, 8001, Schweiz/Suisse/Svizzera/Svizra"
+    },
+    {
+      "name": "Altstadtkirchen · Grossmünster",
+      "lat": 47.370163,
+      "lng": 8.543925,
+      "displayName": "7, Zwingliplatz, Rathaus, Altstadt, Zürich, Bezirk Zürich, Zürich, 8001, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Archäologische Fenster",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.3693938,
+      "lng": 8.5436845,
+      "displayName": "Schifflände, Rathaus, Altstadt, Zürich, Bezirk Zürich, Zürich, 8024, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Archäologische Sammlung UZH",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.3753066,
+      "lng": 8.5488718,
+      "displayName": "UZH-RAK, 73, Rämistrasse, Hochschulen, Altstadt, Zürich, Bezirk Zürich, Zürich, 8006, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Atelier Hermann Haller",
@@ -6463,9 +6481,9 @@
     },
     {
       "name": "extract ETH Zürich",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.3764545,
+      "lng": 8.5481666,
+      "displayName": "ETH-Bibliothek, 101, Rämistrasse, Hochschulen, Altstadt, Zürich, Bezirk Zürich, Zürich, 8092, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "FCZ Museum",
@@ -6481,21 +6499,21 @@
     },
     {
       "name": "focusTerra – ETH Zürich",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.3783567,
+      "lng": 8.5474566,
+      "displayName": "Focus Terra, 5, Sonneggstrasse, Oberstrass, Kreis 6, Zürich, Bezirk Zürich, Zürich, 8092, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Friedhof Forum Museum über Leben und Tod",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.3756615,
+      "lng": 8.5107314,
+      "displayName": "Friedhof Forum, 149, Aemtlerstrasse, Sihlfeld, Kreis 3, Zürich, Bezirk Zürich, Zürich, 8003, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Graphische Sammlung ETH Zürich",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.3764545,
+      "lng": 8.5481666,
+      "displayName": "ETH-Bibliothek, 101, Rämistrasse, Hochschulen, Altstadt, Zürich, Bezirk Zürich, Zürich, 8092, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Heimatschutzzentrum in der Villa Patumbah",
@@ -6517,9 +6535,9 @@
     },
     {
       "name": "Kunstsammlung der Zürcher Kantonalbank (Gast)",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.368301,
+      "lng": 8.5395473,
+      "displayName": "John Baker, 9, Bahnhofstrasse, Lindenhof, Altstadt, Zürich, Bezirk Zürich, Zürich, 8001, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Landesmuseum Zürich",
@@ -6535,9 +6553,9 @@
     },
     {
       "name": "Musée Visionnaire",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.3734515,
+      "lng": 8.5453189,
+      "displayName": "Zur Gemse, 10, Predigerplatz, Rathaus, Altstadt, Zürich, Bezirk Zürich, Zürich, 8001, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Museum für Gestaltung Zürich, Ausstellungsstrasse",
@@ -6547,9 +6565,9 @@
     },
     {
       "name": "Museum für Gestaltung Zürich, Toni-Areal",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.3905035,
+      "lng": 8.5120488,
+      "displayName": "ZHAW Angewandte Psychologie, 96, Pfingstweidstrasse, Escher Wyss, Industriequartier, Zürich, Bezirk Zürich, Zürich, 8005, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Museum Haus Konstruktiv",
@@ -6607,9 +6625,9 @@
     },
     {
       "name": "Stadtgärtnerei – Zentrum für Pflanzen und Bildung",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.3754199,
+      "lng": 8.49878,
+      "displayName": "27, Sackzelg, Albisrieden, Kreis 9, Zürich, Bezirk Zürich, Zürich, 8047, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Strauhof",
@@ -6631,9 +6649,9 @@
     },
     {
       "name": "Völkerkundemuseum UZH",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.3708264,
+      "lng": 8.5343297,
+      "displayName": "Völkerkundemuseum der Universität Zürich, 40, Pelikanstrasse, City, Altstadt, Zürich, Bezirk Zürich, Zürich, 8001, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Zentralbibliothek Zürich",
@@ -6643,9 +6661,9 @@
     },
     {
       "name": "Zivilschutz-Museum",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.3923421,
+      "lng": 8.5255726,
+      "displayName": "Habsburgstrasse, Wipkingen, Kreis 10, Zürich, Bezirk Zürich, Zürich, 8037, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Zoo Zürich",
@@ -6661,9 +6679,9 @@
     },
     {
       "name": "Alterthümer-Magazin",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.3703727,
+      "lng": 8.531727,
+      "displayName": "4, Sihlamtsstrasse, City, Altstadt, Zürich, Bezirk Zürich, Zürich, 8022, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Urania-Sternwarte Zürich",
@@ -6703,15 +6721,15 @@
     },
     {
       "name": "echoes@Cigarettenfabrik (Gast)",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.3886815,
+      "lng": 8.5284976,
+      "displayName": "268, Sihlquai, Swissmill, Gewerbeschule, Industriequartier, Zürich, Bezirk Zürich, Zürich, 8005, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Thomas-Mann-Archiv der ETH Zürich",
-      "lat": null,
-      "lng": null,
-      "displayName": null
+      "lat": 47.3764545,
+      "lng": 8.5481666,
+      "displayName": "ETH-Bibliothek, 101, Rämistrasse, Hochschulen, Altstadt, Zürich, Bezirk Zürich, Zürich, 8092, Schweiz/Suisse/Svizzera/Svizra"
     },
     {
       "name": "Moulagenmuseum",
