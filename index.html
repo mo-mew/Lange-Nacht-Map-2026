@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#111111" />
+  <title>Lange Nacht Zürich — Mappa eventi</title>
+  <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Lange Nacht Zürich</h1>
+      <p id="meta">5 settembre 2026 · 18:00–02:00</p>
+    </div>
+    <a class="official" href="https://langenacht-zuerich.ch/programm" target="_blank" rel="noreferrer">Programma ufficiale ↗</a>
+  </header>
+
+  <main>
+    <aside class="controls" aria-label="Filtri">
+      <label class="search-label">Cerca
+        <input id="search" type="search" placeholder="Evento o museo…" autocomplete="off" />
+      </label>
+
+      <div class="time-row">
+        <label>Dalle
+          <select id="fromTime"></select>
+        </label>
+        <label>alle
+          <select id="toTime"></select>
+        </label>
+      </div>
+
+      <label>Tipo
+        <select id="category"><option value="">Tutti</option></select>
+      </label>
+
+      <label class="check"><input id="onlyMapped" type="checkbox" /> solo luoghi sulla mappa</label>
+
+      <div class="summary" id="summary" aria-live="polite"></div>
+      <div id="eventList" class="event-list"></div>
+    </aside>
+
+    <section class="map-wrap" aria-label="Mappa degli eventi">
+      <div id="map"></div>
+      <div id="mapError" class="map-error" hidden></div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
