@@ -1,4 +1,4 @@
-const DATA_URL = '/data/events.json';
+const DATA_URL = 'data/events.json';
 const ZURICH = [47.3769, 8.5417];
 const $ = s => document.querySelector(s);
 const els = {
@@ -41,8 +41,10 @@ function getFiltered() {
   const cat = els.category.value;
   const mappedSet = new Set(data.venues.filter(v => Number.isFinite(v.lat) && Number.isFinite(v.lng)).map(v => v.name));
   return data.events.filter(e => {
-    const t = e.startMinute ?? 9999;
-    return t >= from && t <= to && (!cat || e.category === cat) &&
+    const start = e.startMinute ?? 9999;
+    const end = e.endMinute ?? start;
+    const overlapsWindow = start <= to && end >= from;
+    return overlapsWindow && (!cat || e.category === cat) &&
       (!q || `${e.title} ${e.venue} ${e.category || ''}`.toLocaleLowerCase('de-CH').includes(q)) &&
       (!els.onlyMapped.checked || mappedSet.has(e.venue));
   });
