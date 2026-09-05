@@ -54,6 +54,11 @@ body.map-now-active .cluster-badge {
   opacity: 0;
   pointer-events: none;
 }
+body.map-now-active .leaflet-marker-icon:has(.marker-badge),
+body.map-now-active .leaflet-marker-icon:has(.cluster-badge) {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
 
 .now-marker-badge {
   width: 46px;
