@@ -6,10 +6,9 @@ on:
     branches: [main]
     paths:
       - 'scripts/scrape.mjs'
+      - 'scripts/enrich-venues.mjs'
       - 'package.json'
       - '.github/workflows/refresh-data.yml'
-  schedule:
-    - cron: '17 15 * * *'
 
 permissions:
   contents: write
@@ -25,6 +24,7 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - run: npm run scrape
+      - run: node scripts/enrich-venues.mjs
       - name: Commit refreshed data
         run: |
           if git diff --quiet -- data/events.json; then
