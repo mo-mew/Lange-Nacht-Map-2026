@@ -2,54 +2,87 @@
 <html lang="it">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#111111" />
-  <title>Lange Nacht Zürich — Mappa eventi</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f6f7f8" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#111315" media="(prefers-color-scheme: dark)" />
+  <meta name="description" content="Mappa interattiva degli eventi della Lange Nacht der Zürcher Museen 2026." />
+  <title>Lange Nacht Zürich 2026 — Mappa eventi</title>
   <link rel="preconnect" href="https://unpkg.com" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
-  <header>
-    <div>
-      <h1>Lange Nacht Zürich</h1>
-      <p id="meta">5 settembre 2026 · 18:00–02:00</p>
-    </div>
-    <a class="official" href="https://langenacht-zuerich.ch/programm" target="_blank" rel="noreferrer">Programma ufficiale ↗</a>
-  </header>
+<body data-view="map">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="header-main">
+        <div class="brand">
+          <p class="eyebrow">5 SEP 2026 · ZÜRICH</p>
+          <h1>La notte dei musei</h1>
+        </div>
 
-  <main>
-    <aside class="controls" aria-label="Filtri">
-      <label class="search-label">Cerca
-        <input id="search" type="search" placeholder="Evento o museo…" autocomplete="off" />
-      </label>
+        <label class="search" for="search">
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
+          <span class="sr-only">Cerca evento o museo</span>
+          <input id="search" type="search" placeholder="Cerca evento o museo" autocomplete="off" />
+        </label>
 
-      <div class="time-row">
-        <label>Dalle
-          <select id="fromTime"></select>
-        </label>
-        <label>alle
-          <select id="toTime"></select>
-        </label>
+        <a class="official" href="https://langenacht-zuerich.ch/programm" target="_blank" rel="noreferrer">
+          Programma ufficiale <span aria-hidden="true">↗</span>
+        </a>
       </div>
 
-      <label>Tipo
-        <select id="category"><option value="">Tutti</option></select>
-      </label>
+      <div class="filter-bar" aria-label="Filtri">
+        <div class="filter-control filter-time">
+          <span class="filter-label">Orario</span>
+          <label><span class="sr-only">Dalle</span><select id="fromTime" aria-label="Dalle"></select></label>
+          <span class="filter-separator" aria-hidden="true">–</span>
+          <label><span class="sr-only">Alle</span><select id="toTime" aria-label="Alle"></select></label>
+        </div>
 
-      <label class="check"><input id="onlyMapped" type="checkbox" /> solo luoghi sulla mappa</label>
+        <label class="filter-control filter-category">
+          <span class="filter-label">Tipo</span>
+          <select id="category"><option value="">Tutti</option></select>
+        </label>
 
-      <div class="summary" id="summary" aria-live="polite"></div>
-      <div id="eventList" class="event-list"></div>
-    </aside>
+        <label class="mapped-toggle">
+          <input id="onlyMapped" type="checkbox" />
+          <span>Solo luoghi sulla mappa</span>
+        </label>
 
-    <section class="map-wrap" aria-label="Mappa degli eventi">
-      <div id="map"></div>
-      <div id="mapError" class="map-error" hidden></div>
-    </section>
-  </main>
+        <button id="resetFilters" class="reset-button" type="button" disabled>Reset</button>
+      </div>
+
+      <div class="mobile-view-toggle" role="group" aria-label="Vista">
+        <button type="button" class="view-button is-active" data-view-target="map" aria-pressed="true">Mappa</button>
+        <button type="button" class="view-button" data-view-target="list" aria-pressed="false">Lista <span id="mobileCount"></span></button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="results-pane" aria-label="Eventi">
+        <div class="results-head">
+          <div>
+            <strong id="summary" aria-live="polite">Caricamento eventi…</strong>
+            <p>Seleziona un evento per mostrarlo sulla mappa.</p>
+          </div>
+        </div>
+
+        <div id="eventList" class="event-list" aria-live="polite">
+          <div class="skeleton-row"><span></span><div><b></b><i></i></div></div>
+          <div class="skeleton-row"><span></span><div><b></b><i></i></div></div>
+          <div class="skeleton-row"><span></span><div><b></b><i></i></div></div>
+          <div class="skeleton-row"><span></span><div><b></b><i></i></div></div>
+        </div>
+      </aside>
+
+      <section class="map-pane" aria-label="Mappa degli eventi">
+        <div id="map"></div>
+        <div id="mapError" class="map-error" hidden></div>
+      </section>
+    </main>
+  </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script type="module" src="/app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
