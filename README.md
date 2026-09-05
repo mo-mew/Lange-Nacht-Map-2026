@@ -20,13 +20,14 @@ npm run dev
 ```bash
 npx playwright install chromium
 npm run scrape
+node scripts/enrich-venues.mjs
 ```
 
-The scraper reads the official programme and writes `data/events.json`. It refuses to replace the dataset if extraction unexpectedly returns fewer than 300 timed events.
+The scraper reads the official programme and writes `data/events.json`. It refuses to replace the dataset if extraction unexpectedly returns fewer than 300 timed events. Venue enrichment uses known public addresses when museum names alone cannot be geocoded reliably.
 
-## Automatic refresh
+## Refresh workflow
 
-`.github/workflows/refresh-data.yml` runs the scraper on changes, manually, and once a day. If the official programme changes, it commits only `data/events.json`.
+`.github/workflows/refresh-data.yml` runs automatically when the scraper changes and can also be started manually from GitHub Actions. It commits only `data/events.json` when the programme data changed.
 
 ## Deploy on Vercel
 
