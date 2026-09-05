@@ -26,6 +26,30 @@ function makeDescription(text, className = 'event-description') {
   return paragraph;
 }
 
+function enrichVenueCards() {
+  document.querySelectorAll('.venue-card').forEach(card => {
+    const venue = normalize(card.querySelector('.venue-card-title')?.textContent);
+    if (!venue) return;
+
+    card.querySelectorAll('.event-preview').forEach(preview => {
+      if (preview.querySelector('.event-description')) return;
+      const titleNode = preview.querySelector(':scope > span');
+      const title = normalize(titleNode?.textContent);
+      const description = descriptionFor(venue, title);
+      if (!titleNode || !description) return;
+
+      titleNode.textContent = '';
+      titleNode.classList.add('event-preview-copy');
+      const titleElement = document.createElement('strong');
+      titleElement.textContent = title;
+      const descriptionElement = document.createElement('small');
+      descriptionElement.className = 'event-description';
+      descriptionElement.textContent = description;
+      titleNode.append(titleElement, descriptionElement);
+    });
+  });
+}
+
 function enrichAgenda() {
   const detail = document.querySelector('#detailView:not([hidden])');
   if (!detail) return;
@@ -67,6 +91,7 @@ function enrichMapCard() {
 
 function enrichVisibleEvents() {
   if (!descriptions.size) return;
+  enrichVenueCards();
   enrichAgenda();
   enrichMapCard();
 }
