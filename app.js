@@ -58,6 +58,24 @@ function escapeHtml(value) {
   }[char]));
 }
 
+function eventTitle(event) {
+  return event.titleIt || event.title || '';
+}
+
+function eventDescription(event) {
+  return event.descriptionIt || event.description || '';
+}
+
+function categoryLabel(category) {
+  if (!category) return '';
+  const match = data.events.find(event => event.category === category && event.categoryIt);
+  return match?.categoryIt || category;
+}
+
+function eventCategory(event) {
+  return event.categoryIt || categoryLabel(event.category);
+}
+
 function groupBy(items, keyFn) {
   const groups = new Map();
   for (const item of items) {
@@ -230,11 +248,11 @@ function eventOverlaps(event, time = state.time) {
 }
 
 function filteredEvents({ ignoreTime = false } = {}) {
-  const query = els.search.value.trim().toLocaleLowerCase('de-CH');
+  const query = els.search.value.trim().toLocaleLowerCase('it-CH');
   const mapped = mappedVenueSet();
 
   return data.events.filter(event => {
-    const searchable = `${event.title} ${event.venue} ${event.category || ''}`.toLocaleLowerCase('de-CH');
+    const searchable = `${eventTitle(event)} ${event.title} ${eventDescription(event)} ${event.description || ''} ${event.venue} ${eventCategory(event)} ${event.category || ''}`.toLocaleLowerCase('it-CH');
     return (ignoreTime || eventOverlaps(event)) &&
       (!state.category || event.category === state.category) &&
       (!query || searchable.includes(query)) &&
@@ -254,17 +272,21 @@ function updateFilterBadge() {
 
 function scopeText() {
   const bits = [formatNightRange(state.time)];
-  if (state.category) bits.push(state.category);
+  if (state.category) bits.push(categoryLabel(state.category));
   if (state.onlyMapped) bits.push('solo mappati');
   if (els.search.value.trim()) bits.push(`“${els.search.value.trim()}”`);
   return bits.join(' · ');
 }
 
 function eventPreviewHtml(event) {
+  const description = eventDescription(event);
   return `
     <span class="event-preview">
       <time>${escapeHtml(shortTime(event.start))}</time>
-      <span>${escapeHtml(event.title)}</span>
+      <span class="event-preview-copy">
+        <strong>${escapeHtml(eventTitle(event))}</strong>
+        ${description ? `<small class="event-description">${escapeHtml(description)}</small>` : ''}
+      </span>
     </span>
   `;
 }
@@ -366,7 +388,7 @@ function nextTime(events) {
 }
 
 function placeRowHtml(name, events) {
-  const categories = [...new Set(events.map(event => event.category).filter(Boolean))].slice(0, 2);
+  const categories = [...new Set(events.map(event => eventCategory(event)).filter(Boolean))].slice(0, 2);
   const subtitle = `${events.length} ${events.length === 1 ? 'evento' : 'eventi'}${categories.length ? ` · ${categories.join(' · ')}` : ''}`;
   return `
     <button class="place-row" type="button" data-open-venue="${escapeHtml(name)}">
@@ -448,7 +470,7 @@ function mapCardHtml(name, events) {
       ${previews.map(event => `
         <div class="map-preview">
           <time>${escapeHtml(shortTime(event.start))}</time>
-          <span>${escapeHtml(event.title)}</span>
+          <span class="map-preview-copy"><strong>${escapeHtml(eventTitle(event))}</strong>${eventDescription(event) ? `<small class="event-description">${escapeHtml(eventDescription(event))}</small>` : ''}</span>
         </div>
       `).join('')}
     </div>
@@ -520,11 +542,11 @@ function focusVenueOnMap(name) {
 }
 
 function detailAgendaEvents(name) {
-  const query = els.search.value.trim().toLocaleLowerCase('de-CH');
+  const query = els.search.value.trim().toLocaleLowerCase('it-CH');
   return data.events
     .filter(event => event.venue === name)
     .filter(event => !state.category || event.category === state.category)
-    .filter(event => !query || `${event.title} ${event.venue} ${event.category || ''}`.toLocaleLowerCase('de-CH').includes(query))
+    .filter(event => !query || `${eventTitle(event)} ${event.title} ${eventDescription(event)} ${event.description || ''} ${event.venue} ${eventCategory(event)} ${event.category || ''}`.toLocaleLowerCase('it-CH').includes(query))
     .sort((a, b) => (a.startMinute ?? 9999) - (b.startMinute ?? 9999));
 }
 
@@ -536,10 +558,11 @@ function agendaRowHtml(event) {
         ${event.end ? `<small>– ${escapeHtml(shortTime(event.end))}</small>` : ''}
       </time>
       <div>
-        <strong>${escapeHtml(event.title)}</strong>
+        <strong>${escapeHtml(eventTitle(event))}</strong>
+        ${eventDescription(event) ? `<p class="event-description">${escapeHtml(eventDescription(event))}</p>` : ''}
         <div class="agenda-meta">
-          ${event.category ? `<span>${escapeHtml(event.category)}</span>` : ''}
-          <a href="${escapeHtml(event.url)}" target="_blank" rel="noreferrer">Dettagli ↗</a>
+          ${event.category ? `<span>${escapeHtml(eventCategory(event))}</span>` : ''}
+          <a href="${escapeHtml(event.url)}" target="_blank" rel="noreferrer">Programma ufficiale ↗</a>
         </div>
       </div>
     </article>
@@ -656,9 +679,9 @@ function closeFilters() {
 
 function setupFilters() {
   const categories = [...new Set(data.events.map(event => event.category).filter(Boolean))]
-    .sort((a, b) => a.localeCompare(b, 'de-CH'));
+    .sort((a, b) => categoryLabel(a).localeCompare(categoryLabel(b), 'it-CH'));
 
-  const options = [{ value: '', label: 'Tutti i tipi' }, ...categories.map(category => ({ value: category, label: category }))];
+  const options = [{ value: '', label: 'Tutti i tipi' }, ...categories.map(category => ({ value: category, label: categoryLabel(category) }))];
   els.categoryOptions.innerHTML = options.map((option, index) => `
     <label class="radio-row">
       <span>${escapeHtml(option.label)}</span>
