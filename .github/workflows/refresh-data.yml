@@ -1,0 +1,38 @@
+name: Refresh programme data
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/scrape.mjs'
+      - 'package.json'
+      - '.github/workflows/refresh-data.yml'
+  schedule:
+    - cron: '17 15 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm run scrape
+      - name: Commit refreshed data
+        run: |
+          if git diff --quiet -- data/events.json; then
+            echo "No data changes"
+            exit 0
+          fi
+          git config user.name "mo-mew"
+          git config user.email "mo-mew@users.noreply.github.com"
+          git add data/events.json
+          git commit -m "Refresh 2026 programme data"
+          git push
