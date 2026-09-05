@@ -12,6 +12,8 @@ DetectorFactory.seed = 0
 
 DATA_PATH = Path("data/events.json")
 CACHE_PATH = Path("data/translations-it.json")
+CACHE_VERSION = 2
+MODEL_NAME = "facebook/m2m100_418M"
 
 CATEGORY_IT = {
     "Konzert": "Concerto",
@@ -22,11 +24,6 @@ CATEGORY_IT = {
     "Party": "Festa",
     "Performance/Tanz/Theater": "Performance, danza o teatro",
     "Workshop": "Laboratorio",
-}
-
-MODELS = {
-    "de": "Helsinki-NLP/opus-mt-de-it",
-    "en": "Helsinki-NLP/opus-mt-en-it",
 }
 
 
@@ -68,7 +65,7 @@ def event_languages(event):
 def load_cache():
     try:
         raw = json.loads(CACHE_PATH.read_text(encoding="utf-8"))
-        if raw.get("version") == 1 and isinstance(raw.get("items"), dict):
+        if raw.get("version") == CACHE_VERSION and isinstance(raw.get("items"), dict):
             return raw["items"]
     except Exception:
         pass
@@ -78,48 +75,57 @@ def load_cache():
 def save_cache(items):
     CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
     CACHE_PATH.write_text(
-        json.dumps({"version": 1, "items": items}, ensure_ascii=False, indent=2) + "\n",
+        json.dumps({"version": CACHE_VERSION, "model": MODEL_NAME, "items": items}, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
 
 
-def translate_batches(lang, texts):
-    if not texts:
+def translate_all(jobs):
+    pending_count = sum(len(values) for values in jobs.values())
+    if not pending_count:
         return {}
 
     import torch
-    from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+    from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
 
-    model_name = MODELS[lang]
-    print(f"Loading {model_name} for {len(texts)} unique strings…")
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+    print(f"Loading {MODEL_NAME} for {pending_count} unique strings…")
+    tokenizer = M2M100Tokenizer.from_pretrained(MODEL_NAME)
+    model = M2M100ForConditionalGeneration.from_pretrained(MODEL_NAME)
     model.eval()
     torch.set_num_threads(max(1, min(4, torch.get_num_threads())))
 
     output = {}
-    batch_size = 24
+    batch_size = 16
     with torch.inference_mode():
-        for offset in range(0, len(texts), batch_size):
-            batch = texts[offset : offset + batch_size]
-            encoded = tokenizer(
-                batch,
-                return_tensors="pt",
-                padding=True,
-                truncation=True,
-                max_length=256,
-            )
-            generated = model.generate(
-                **encoded,
-                max_new_tokens=256,
-                num_beams=3,
-                early_stopping=True,
-                renormalize_logits=True,
-            )
-            translated = tokenizer.batch_decode(generated, skip_special_tokens=True)
-            for source, target in zip(batch, translated):
-                output[source] = clean(target) or source
-            print(f"  {min(offset + batch_size, len(texts))}/{len(texts)}")
+        for lang in ("de", "en"):
+            texts = sorted(jobs.get(lang, set()))
+            if not texts:
+                continue
+            tokenizer.src_lang = lang
+            target_id = tokenizer.get_lang_id("it")
+            print(f"Translating {len(texts)} {lang} strings…")
+
+            for offset in range(0, len(texts), batch_size):
+                batch = texts[offset : offset + batch_size]
+                encoded = tokenizer(
+                    batch,
+                    return_tensors="pt",
+                    padding=True,
+                    truncation=True,
+                    max_length=256,
+                )
+                generated = model.generate(
+                    **encoded,
+                    forced_bos_token_id=target_id,
+                    max_new_tokens=256,
+                    num_beams=3,
+                    early_stopping=True,
+                    renormalize_logits=True,
+                )
+                translated = tokenizer.batch_decode(generated, skip_special_tokens=True)
+                for source, target in zip(batch, translated):
+                    output[(lang, source)] = clean(target) or source
+                print(f"  {lang}: {min(offset + batch_size, len(texts))}/{len(texts)}")
 
     del model
     del tokenizer
@@ -148,29 +154,19 @@ def main():
             if key not in cache:
                 jobs[lang].add(text)
 
-    for lang in ("de", "en"):
-        pending = sorted(jobs[lang])
-        if not pending:
-            continue
-        translated = translate_batches(lang, pending)
-        for source, target in translated.items():
-            cache[hash_key(lang, source)] = target
-        save_cache(cache)
+    translated = translate_all(jobs)
+    for (lang, source), target in translated.items():
+        cache[hash_key(lang, source)] = target
+    save_cache(cache)
 
     for event, title, description, title_lang, description_lang in event_meta:
         if title:
-            if title_lang == "it":
-                event["titleIt"] = title
-            else:
-                event["titleIt"] = cache.get(hash_key(title_lang, title), title)
+            event["titleIt"] = title if title_lang == "it" else cache.get(hash_key(title_lang, title), title)
         else:
-            event["titleIt"] = title
+            event["titleIt"] = ""
 
         if description:
-            if description_lang == "it":
-                event["descriptionIt"] = description
-            else:
-                event["descriptionIt"] = cache.get(hash_key(description_lang, description), description)
+            event["descriptionIt"] = description if description_lang == "it" else cache.get(hash_key(description_lang, description), description)
         else:
             event["descriptionIt"] = ""
 
@@ -181,7 +177,7 @@ def main():
     data["translation"] = {
         "target": "it",
         "generatedAt": datetime.now(timezone.utc).isoformat(),
-        "models": sorted(set(MODELS.values())),
+        "model": MODEL_NAME,
     }
 
     DATA_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
