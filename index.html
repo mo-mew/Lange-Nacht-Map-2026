@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#f6f7f8" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#111315" media="(prefers-color-scheme: dark)" />
-  <meta name="description" content="Mappa interattiva degli eventi della Lange Nacht der Zürcher Museen 2026." />
-  <title>Lange Nacht Zürich 2026 — Mappa eventi</title>
+  <meta name="description" content="Esplora gli eventi della Lange Nacht der Zürcher Museen 2026 per luogo e orario." />
+  <title>Lange Nacht Zürich 2026</title>
   <link rel="preconnect" href="https://unpkg.com" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body data-view="map">
+<body data-mobile-view="map">
   <div class="app-shell">
     <header class="app-header">
       <div class="header-main">
@@ -32,12 +32,7 @@
       </div>
 
       <div class="filter-bar" aria-label="Filtri">
-        <div class="filter-control filter-time">
-          <span class="filter-label">Orario</span>
-          <label><span class="sr-only">Dalle</span><select id="fromTime" aria-label="Dalle"></select></label>
-          <span class="filter-separator" aria-hidden="true">–</span>
-          <label><span class="sr-only">Alle</span><select id="toTime" aria-label="Alle"></select></label>
-        </div>
+        <div class="time-strip" id="timeStrip" role="group" aria-label="Fascia oraria"></div>
 
         <label class="filter-control filter-category">
           <span class="filter-label">Tipo</span>
@@ -46,32 +41,32 @@
 
         <label class="mapped-toggle">
           <input id="onlyMapped" type="checkbox" />
-          <span>Solo luoghi sulla mappa</span>
+          <span>Solo mappati</span>
         </label>
 
         <button id="resetFilters" class="reset-button" type="button" disabled>Reset</button>
       </div>
 
       <div class="mobile-view-toggle" role="group" aria-label="Vista">
-        <button type="button" class="view-button is-active" data-view-target="map" aria-pressed="true">Mappa</button>
-        <button type="button" class="view-button" data-view-target="list" aria-pressed="false">Lista <span id="mobileCount"></span></button>
+        <button type="button" class="view-button is-active" data-mobile-target="map" aria-pressed="true">Mappa</button>
+        <button type="button" class="view-button" data-mobile-target="explore" aria-pressed="false">Esplora <span id="mobileCount"></span></button>
       </div>
     </header>
 
     <main class="workspace">
-      <aside class="results-pane" aria-label="Eventi">
-        <div class="results-head">
-          <div>
-            <strong id="summary" aria-live="polite">Caricamento eventi…</strong>
-            <p>Seleziona un evento per mostrarlo sulla mappa.</p>
+      <aside class="results-pane" aria-label="Esplora eventi">
+        <div class="results-toolbar">
+          <div class="browse-tabs" role="group" aria-label="Raggruppa eventi">
+            <button class="browse-tab is-active" type="button" data-browse-mode="venues" aria-pressed="true">Luoghi</button>
+            <button class="browse-tab" type="button" data-browse-mode="time" aria-pressed="false">Orari</button>
           </div>
+          <span id="summary" class="summary" aria-live="polite">Caricamento…</span>
         </div>
 
-        <div id="eventList" class="event-list" aria-live="polite">
-          <div class="skeleton-row"><span></span><div><b></b><i></i></div></div>
-          <div class="skeleton-row"><span></span><div><b></b><i></i></div></div>
-          <div class="skeleton-row"><span></span><div><b></b><i></i></div></div>
-          <div class="skeleton-row"><span></span><div><b></b><i></i></div></div>
+        <div id="browseList" class="browse-list" aria-live="polite">
+          <div class="skeleton-group"><b></b><i></i><i></i></div>
+          <div class="skeleton-group"><b></b><i></i><i></i></div>
+          <div class="skeleton-group"><b></b><i></i><i></i></div>
         </div>
       </aside>
 
