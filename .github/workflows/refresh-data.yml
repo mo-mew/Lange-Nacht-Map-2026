@@ -8,6 +8,8 @@ on:
       - 'scripts/scrape.mjs'
       - 'scripts/enrich-venues.mjs'
       - 'scripts/enrich-descriptions.mjs'
+      - 'scripts/translate-it.py'
+      - 'scripts/apply-italian-ui.mjs'
       - 'package.json'
       - '.github/workflows/refresh-data.yml'
 
@@ -21,26 +23,43 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Cache translation models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-opus-de-en-it-v1
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - run: npm run scrape
       - run: node scripts/enrich-venues.mjs
       - run: node scripts/enrich-descriptions.mjs
+      - name: Install translation dependencies
+        run: |
+          python -m pip install --disable-pip-version-check --index-url https://download.pytorch.org/whl/cpu torch
+          python -m pip install --disable-pip-version-check 'transformers<5' sentencepiece sacremoses langdetect
+      - name: Translate programme to Italian
+        run: python scripts/translate-it.py
+      - name: Apply Italian UI fields
+        run: node scripts/apply-italian-ui.mjs
       - name: Commit refreshed data
         run: |
-          if git diff --quiet -- data/events.json; then
-            echo "No data changes"
+          if git diff --quiet -- data/events.json data/translations-it.json app.js index.html; then
+            echo "No data or localization changes"
             exit 0
           fi
           git config user.name "mo-mew"
           git config user.email "mo-mew@users.noreply.github.com"
-          git add data/events.json
-          git commit -m "Refresh 2026 programme data"
+          git add data/events.json data/translations-it.json app.js index.html
+          git commit -m "Localize programme in Italian"
           git fetch origin main
           git rebase origin/main
           git push origin main
