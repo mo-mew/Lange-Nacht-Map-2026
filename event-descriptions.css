@@ -1,0 +1,37 @@
+.agenda-row .event-description {
+  margin: 6px 0 0;
+  color: var(--secondary);
+  font-size: 14px;
+  line-height: 1.42;
+}
+
+.agenda-row .agenda-meta {
+  margin-top: 9px;
+}
+
+.map-preview > span {
+  font-weight: 650;
+}
+
+.map-preview .event-description {
+  grid-column: 2;
+  display: -webkit-box;
+  margin: 3px 0 0;
+  overflow: hidden;
+  color: var(--secondary);
+  font-size: 12px;
+  line-height: 1.32;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+@media (max-width: 760px) {
+  .agenda-row .event-description {
+    font-size: 15px;
+    line-height: 1.42;
+  }
+
+  .map-preview .event-description {
+    font-size: 13px;
+  }
+}
