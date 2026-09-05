@@ -3,81 +3,129 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#f6f7f8" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#111315" media="(prefers-color-scheme: dark)" />
-  <meta name="description" content="Esplora gli eventi della Lange Nacht der Zürcher Museen 2026 per luogo e orario." />
+  <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+  <meta name="description" content="Esplora gli eventi della Lange Nacht der Zürcher Museen 2026 per orario, luogo e mappa." />
   <title>Lange Nacht Zürich 2026</title>
   <link rel="preconnect" href="https://unpkg.com" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body data-mobile-view="map">
+<body data-tab="tonight">
   <div class="app-shell">
-    <header class="app-header">
-      <div class="header-main">
+    <header class="topbar">
+      <div class="title-row">
         <div class="brand">
-          <p class="eyebrow">5 SEP 2026 · ZÜRICH</p>
-          <h1>La notte dei musei</h1>
+          <p>Zürich · 5 settembre</p>
+          <h1>Lange Nacht</h1>
         </div>
-
-        <label class="search" for="search">
-          <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
-          <span class="sr-only">Cerca evento o museo</span>
-          <input id="search" type="search" placeholder="Cerca evento o museo" autocomplete="off" />
-        </label>
-
-        <a class="official" href="https://langenacht-zuerich.ch/programm" target="_blank" rel="noreferrer">
-          Programma ufficiale <span aria-hidden="true">↗</span>
+        <a class="icon-button official-link" href="https://langenacht-zuerich.ch/programm" target="_blank" rel="noreferrer" aria-label="Apri il programma ufficiale">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-8 8M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>
         </a>
       </div>
 
-      <div class="filter-bar" aria-label="Filtri">
-        <div class="time-strip" id="timeStrip" role="group" aria-label="Fascia oraria"></div>
+      <label class="search-bar" for="search">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+        <span class="sr-only">Cerca musei ed eventi</span>
+        <input id="search" type="search" placeholder="Cerca musei ed eventi" autocomplete="off" enterkeyhint="search" />
+      </label>
 
-        <label class="filter-control filter-category">
-          <span class="filter-label">Tipo</span>
-          <select id="category"><option value="">Tutti</option></select>
-        </label>
-
-        <label class="mapped-toggle">
-          <input id="onlyMapped" type="checkbox" />
-          <span>Solo mappati</span>
-        </label>
-
-        <button id="resetFilters" class="reset-button" type="button" disabled>Reset</button>
-      </div>
-
-      <div class="mobile-view-toggle" role="group" aria-label="Vista">
-        <button type="button" class="view-button is-active" data-mobile-target="map" aria-pressed="true">Mappa</button>
-        <button type="button" class="view-button" data-mobile-target="explore" aria-pressed="false">Esplora <span id="mobileCount"></span></button>
+      <div class="scope-row">
+        <div id="timeRail" class="time-rail" role="group" aria-label="Filtra per orario"></div>
+        <button class="filter-button" type="button" data-open-filters aria-label="Apri filtri">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M7 12h10M10 17h4"/></svg>
+          <span>Filtri</span>
+          <b id="filterBadge" hidden></b>
+        </button>
       </div>
     </header>
 
     <main class="workspace">
-      <aside class="results-pane" aria-label="Esplora eventi">
-        <div class="results-toolbar">
-          <div class="browse-tabs" role="group" aria-label="Raggruppa eventi">
-            <button class="browse-tab is-active" type="button" data-browse-mode="venues" aria-pressed="true">Luoghi</button>
-            <button class="browse-tab" type="button" data-browse-mode="time" aria-pressed="false">Orari</button>
-          </div>
-          <span id="summary" class="summary" aria-live="polite">Caricamento…</span>
+      <aside class="browser-pane" aria-label="Esplora gli eventi">
+        <div class="desktop-mode" role="tablist" aria-label="Modalità di esplorazione">
+          <button type="button" data-desktop-tab="tonight" class="is-active" aria-selected="true">Stasera</button>
+          <button type="button" data-desktop-tab="venues" aria-selected="false">Luoghi</button>
         </div>
 
-        <div id="browseList" class="browse-list" aria-live="polite">
-          <div class="skeleton-group"><b></b><i></i><i></i></div>
-          <div class="skeleton-group"><b></b><i></i><i></i></div>
-          <div class="skeleton-group"><b></b><i></i><i></i></div>
+        <div class="browser-header">
+          <div>
+            <strong id="summary" aria-live="polite">Caricamento…</strong>
+            <p id="scopeLabel">Tutta la notte</p>
+          </div>
+        </div>
+
+        <div id="browserContent" class="browser-content">
+          <div class="loading-section">
+            <span></span><span></span><span></span>
+          </div>
         </div>
       </aside>
 
-      <section class="map-pane" aria-label="Mappa degli eventi">
+      <section class="map-pane" aria-label="Mappa dei musei">
         <div id="map"></div>
         <div id="mapError" class="map-error" hidden></div>
+        <article id="mapCard" class="map-card" hidden aria-live="polite"></article>
       </section>
     </main>
+
+    <nav class="tabbar" aria-label="Navigazione principale">
+      <button type="button" data-tab-target="tonight" class="is-active" aria-current="page">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg>
+        <span>Stasera</span>
+      </button>
+      <button type="button" data-tab-target="venues">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 20V6l7-3 7 3v14M9 8h.01M15 8h.01M9 12h.01M15 12h.01M9 16h.01M15 16h.01M3 20h18"/></svg>
+        <span>Luoghi</span>
+      </button>
+      <button type="button" data-tab-target="map">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m4 6 5-2 6 2 5-2v14l-5 2-6-2-5 2V6ZM9 4v14M15 6v14"/></svg>
+        <span>Mappa</span>
+      </button>
+    </nav>
   </div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <dialog id="filterDialog" class="filter-dialog">
+    <form id="filterForm" class="filter-sheet">
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <div class="sheet-header">
+        <button type="button" class="sheet-close icon-button" data-close-filters aria-label="Chiudi filtri">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17"/></svg>
+        </button>
+        <h2>Filtri</h2>
+        <button id="clearFilters" class="text-button" type="button">Reset</button>
+      </div>
+
+      <fieldset>
+        <legend>Tipo di evento</legend>
+        <div id="categoryOptions" class="option-list"></div>
+      </fieldset>
+
+      <label class="check-row">
+        <span>
+          <strong>Solo luoghi sulla mappa</strong>
+          <small>Nasconde i luoghi senza coordinate.</small>
+        </span>
+        <input id="mappedFilter" type="checkbox" />
+      </label>
+
+      <button class="primary-button" type="submit">Mostra risultati</button>
+    </form>
+  </dialog>
+
+  <section id="detailView" class="detail-view" hidden aria-label="Agenda del luogo">
+    <header class="detail-nav">
+      <button id="detailBack" class="back-button" type="button">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Indietro</span>
+      </button>
+      <button id="detailMap" class="text-button" type="button">Mappa</button>
+    </header>
+    <div id="detailContent" class="detail-content"></div>
+  </section>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   <script type="module" src="app.js"></script>
 </body>
 </html>

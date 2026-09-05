@@ -1,45 +1,72 @@
 const DATA_URL = 'data/events.json';
+const EVENT_DATE = '2026-09-05';
 const ZURICH = [47.3769, 8.5417];
-const MOBILE_QUERY = '(max-width: 760px)';
 const NIGHT_START = 18 * 60;
 const NIGHT_END = 26 * 60;
+const MOBILE_QUERY = '(max-width: 760px)';
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
+
 const els = {
   search: $('#search'),
-  category: $('#category'),
-  onlyMapped: $('#onlyMapped'),
-  reset: $('#resetFilters'),
+  timeRail: $('#timeRail'),
+  filterBadge: $('#filterBadge'),
   summary: $('#summary'),
-  browseList: $('#browseList'),
-  timeStrip: $('#timeStrip'),
-  mobileCount: $('#mobileCount'),
+  scopeLabel: $('#scopeLabel'),
+  browserContent: $('#browserContent'),
   mapError: $('#mapError'),
-  browseTabs: $$('[data-browse-mode]'),
-  mobileTabs: $$('[data-mobile-target]')
+  mapCard: $('#mapCard'),
+  filterDialog: $('#filterDialog'),
+  filterForm: $('#filterForm'),
+  categoryOptions: $('#categoryOptions'),
+  mappedFilter: $('#mappedFilter'),
+  clearFilters: $('#clearFilters'),
+  detailView: $('#detailView'),
+  detailBack: $('#detailBack'),
+  detailMap: $('#detailMap'),
+  detailContent: $('#detailContent'),
+  tabButtons: $$('[data-tab-target]'),
+  desktopTabs: $$('[data-desktop-tab]'),
+  openFilterButtons: $$('[data-open-filters]'),
+  closeFilterButtons: $$('[data-close-filters]')
+};
+
+const state = {
+  tab: 'tonight',
+  time: { key: 'all', from: NIGHT_START, to: NIGHT_END, label: 'Tutta la notte' },
+  category: '',
+  onlyMapped: false,
+  expandedHours: new Set(),
+  venue: null,
+  mapVenue: null
 };
 
 let data = { events: [], venues: [] };
 let map;
-let tileLayer;
-let markers = new Map();
-let hasFittedMap = false;
-let browseMode = 'venues';
-let selectedVenue = null;
-let activeTime = { from: NIGHT_START, to: NIGHT_END, key: 'all' };
+let markerLayer;
+let markerByVenue = new Map();
+let mapHasFitted = false;
+let detailWasPushed = false;
+
 const mobileMedia = matchMedia(MOBILE_QUERY);
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
-const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({
-  '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-}[char]));
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>'"]/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+  }[char]));
+}
 
-const groupBy = (items, keyFn) => items.reduce((groups, item) => {
-  const key = keyFn(item);
-  if (!groups.has(key)) groups.set(key, []);
-  groups.get(key).push(item);
+function groupBy(items, keyFn) {
+  const groups = new Map();
+  for (const item of items) {
+    const key = keyFn(item);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(item);
+  }
   return groups;
-}, new Map());
+}
 
 function shortTime(value) {
   if (!value) return '';
@@ -47,308 +74,684 @@ function shortTime(value) {
   return minute === '00' ? hour : `${hour}:${minute}`;
 }
 
-function setupTimeStrip() {
-  const buttons = [
-    { key: 'all', label: 'Tutta', from: NIGHT_START, to: NIGHT_END },
-    ...Array.from({ length: 8 }, (_, index) => {
-      const hour = 18 + index;
-      return { key: String(hour), label: String(hour % 24).padStart(2, '0'), from: hour * 60, to: hour * 60 + 59 };
-    })
-  ];
-  els.timeStrip.innerHTML = buttons.map(button => `<button type="button" class="time-chip${button.key === 'all' ? ' is-active' : ''}" data-time-key="${button.key}" data-from="${button.from}" data-to="${button.to}" aria-pressed="${button.key === 'all'}">${button.label}</button>`).join('');
-  els.timeStrip.addEventListener('click', event => {
+function hourLabel(hour) {
+  return `${String(hour % 24).padStart(2, '0')}:00`;
+}
+
+function formatNightRange(time) {
+  if (time.key === 'all') return 'Tutta la notte';
+  if (time.key === 'now') {
+    return `Adesso · ${minuteLabel(time.from)}–${minuteLabel(time.to)}`;
+  }
+  return `${minuteLabel(time.from)}–${minuteLabel(time.to)}`;
+}
+
+function minuteLabel(total) {
+  const hour = Math.floor(total / 60) % 24;
+  const minute = total % 60;
+  return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+}
+
+function zurichNightMinute() {
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Zurich',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23'
+  });
+  const parts = Object.fromEntries(
+    formatter.formatToParts(new Date())
+      .filter(part => part.type !== 'literal')
+      .map(part => [part.type, part.value])
+  );
+  const date = `${parts.year}-${parts.month}-${parts.day}`;
+  const hour = Number(parts.hour);
+  const minute = Number(parts.minute);
+
+  if (date === EVENT_DATE && hour >= 18) return hour * 60 + minute;
+  if (date === '2026-09-06' && hour < 2) return (hour + 24) * 60 + minute;
+  return null;
+}
+
+function setupTimeRail() {
+  const now = zurichNightMinute();
+  const options = [{ key: 'all', label: 'Tutta', from: NIGHT_START, to: NIGHT_END, scope: 'Tutta la notte' }];
+
+  if (now !== null && now >= NIGHT_START && now < NIGHT_END) {
+    options.push({
+      key: 'now',
+      label: 'Ora',
+      from: now,
+      to: Math.min(now + 60, NIGHT_END),
+      scope: `Adesso · ${minuteLabel(now)}–${minuteLabel(Math.min(now + 60, NIGHT_END))}`
+    });
+  }
+
+  for (let hour = 18; hour <= 25; hour += 1) {
+    options.push({
+      key: String(hour),
+      label: String(hour % 24).padStart(2, '0'),
+      from: hour * 60,
+      to: hour * 60 + 59,
+      scope: `${hourLabel(hour)}–${minuteLabel(hour * 60 + 59)}`
+    });
+  }
+
+  els.timeRail.innerHTML = options.map(option => `
+    <button
+      type="button"
+      class="time-chip${option.key === state.time.key ? ' is-active' : ''}"
+      data-time-key="${option.key}"
+      data-from="${option.from}"
+      data-to="${option.to}"
+      data-scope="${escapeHtml(option.scope)}"
+      aria-pressed="${option.key === state.time.key}"
+    >${escapeHtml(option.label)}</button>
+  `).join('');
+
+  els.timeRail.addEventListener('click', event => {
     const button = event.target.closest('[data-time-key]');
     if (!button) return;
-    activeTime = { from: Number(button.dataset.from), to: Number(button.dataset.to), key: button.dataset.timeKey };
-    selectedVenue = null;
-    updateTimeButtons();
+    state.time = {
+      key: button.dataset.timeKey,
+      from: Number(button.dataset.from),
+      to: Number(button.dataset.to),
+      label: button.dataset.scope
+    };
+    state.expandedHours.clear();
+    updateTimeRail();
     render();
   });
 }
 
-function updateTimeButtons() {
-  els.timeStrip.querySelectorAll('[data-time-key]').forEach(button => {
-    const active = button.dataset.timeKey === activeTime.key;
+function updateTimeRail() {
+  els.timeRail.querySelectorAll('[data-time-key]').forEach(button => {
+    const active = button.dataset.timeKey === state.time.key;
     button.classList.toggle('is-active', active);
     button.setAttribute('aria-pressed', String(active));
   });
+  const active = els.timeRail.querySelector(`[data-time-key="${CSS.escape(state.time.key)}"]`);
+  active?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: reducedMotion.matches ? 'auto' : 'smooth' });
 }
 
 function setupMap() {
   if (!window.L) {
     els.mapError.hidden = false;
-    els.mapError.textContent = 'La mappa non è disponibile. Controlla la connessione e ricarica la pagina.';
+    els.mapError.textContent = 'La mappa non è disponibile. Ricarica la pagina quando hai connessione.';
     return;
   }
-  map = L.map('map', { zoomControl: true, preferCanvas: true }).setView(ZURICH, 13);
-  tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+
+  map = L.map('map', {
+    zoomControl: true,
+    preferCanvas: true,
+    attributionControl: true
+  }).setView(ZURICH, 13);
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
+
+  if (typeof L.markerClusterGroup === 'function') {
+    markerLayer = L.markerClusterGroup({
+      showCoverageOnHover: false,
+      spiderfyOnMaxZoom: true,
+      maxClusterRadius: 46,
+      disableClusteringAtZoom: 16,
+      iconCreateFunction(cluster) {
+        return L.divIcon({
+          className: '',
+          html: `<div class="cluster-badge">${cluster.getChildCount()}</div>`,
+          iconSize: [42, 42],
+          iconAnchor: [21, 21]
+        });
+      }
+    }).addTo(map);
+  } else {
+    markerLayer = L.layerGroup().addTo(map);
+  }
 }
 
-function mappedVenueNames() {
-  return new Set(data.venues
-    .filter(venue => Number.isFinite(venue.lat) && Number.isFinite(venue.lng))
-    .map(venue => venue.name));
+function mappedVenueSet() {
+  return new Set(
+    data.venues
+      .filter(venue => Number.isFinite(venue.lat) && Number.isFinite(venue.lng))
+      .map(venue => venue.name)
+  );
 }
 
-function eventOverlapsWindow(event) {
+function eventOverlaps(event, time = state.time) {
   const start = event.startMinute ?? 9999;
   const end = event.endMinute ?? start;
-  return start <= activeTime.to && end >= activeTime.from;
+  return start <= time.to && end >= time.from;
 }
 
-function filteredEvents() {
+function filteredEvents({ ignoreTime = false } = {}) {
   const query = els.search.value.trim().toLocaleLowerCase('de-CH');
-  const category = els.category.value;
-  const mapped = mappedVenueNames();
-  return data.events.filter(event =>
-    eventOverlapsWindow(event) &&
-    (!category || event.category === category) &&
-    (!query || `${event.title} ${event.venue} ${event.category || ''}`.toLocaleLowerCase('de-CH').includes(query)) &&
-    (!els.onlyMapped.checked || mapped.has(event.venue))
-  );
-}
+  const mapped = mappedVenueSet();
 
-function hasActiveFilters() {
-  return Boolean(
-    els.search.value.trim() ||
-    els.category.value ||
-    els.onlyMapped.checked ||
-    activeTime.key !== 'all'
-  );
-}
-
-function uniqueTimes(events, limit = 4) {
-  const seen = [];
-  for (const event of events) {
-    const value = shortTime(event.start);
-    if (value && !seen.includes(value)) seen.push(value);
-    if (seen.length === limit) break;
-  }
-  return seen;
-}
-
-function categorySummary(events, limit = 2) {
-  const counts = new Map();
-  for (const event of events) if (event.category) counts.set(event.category, (counts.get(event.category) || 0) + 1);
-  return [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, limit).map(([name]) => name);
-}
-
-function venueRowHtml(name, events) {
-  const sorted = [...events].sort((a, b) => (a.startMinute ?? 9999) - (b.startMinute ?? 9999));
-  const times = uniqueTimes(sorted);
-  const cats = categorySummary(sorted);
-  return `<button class="venue-row" type="button" data-venue="${escapeHtml(name)}">
-    <span class="venue-copy">
-      <span class="venue-title">${escapeHtml(name)}</span>
-      <span class="venue-sub">${events.length} ${events.length === 1 ? 'evento' : 'eventi'}${cats.length ? ` · ${cats.map(escapeHtml).join(' · ')}` : ''}</span>
-    </span>
-    <span class="venue-times">${times.map(time => `<span>${escapeHtml(time)}</span>`).join('')}${events.length > times.length ? '<span>…</span>' : ''}</span>
-    <span class="chevron" aria-hidden="true">›</span>
-  </button>`;
-}
-
-function renderVenueBrowser(events) {
-  const groups = groupBy(events, event => event.venue);
-  const ordered = [...groups.entries()].sort((a, b) => {
-    const aStart = Math.min(...a[1].map(event => event.startMinute ?? 9999));
-    const bStart = Math.min(...b[1].map(event => event.startMinute ?? 9999));
-    return aStart - bStart || a[0].localeCompare(b[0], 'de-CH');
+  return data.events.filter(event => {
+    const searchable = `${event.title} ${event.venue} ${event.category || ''}`.toLocaleLowerCase('de-CH');
+    return (ignoreTime || eventOverlaps(event)) &&
+      (!state.category || event.category === state.category) &&
+      (!query || searchable.includes(query)) &&
+      (!state.onlyMapped || mapped.has(event.venue));
   });
-
-  if (!ordered.length) return emptyStateHtml();
-  return `<div class="section-intro"><strong>${ordered.length} luoghi</strong><span>Scegli un museo per vedere la sua agenda.</span></div>${ordered.map(([name, venueEvents]) => venueRowHtml(name, venueEvents)).join('')}`;
 }
 
-function renderTimeBrowser(events) {
-  const hourGroups = groupBy(events, event => Math.floor((event.startMinute ?? NIGHT_END) / 60));
-  const orderedHours = [...hourGroups.keys()].sort((a, b) => a - b);
-  if (!orderedHours.length) return emptyStateHtml();
-
-  return orderedHours.map((hour, index) => {
-    const hourEvents = hourGroups.get(hour);
-    const venues = groupBy(hourEvents, event => event.venue);
-    const rows = [...venues.entries()]
-      .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0], 'de-CH'))
-      .map(([name, venueEvents]) => venueRowHtml(name, venueEvents)).join('');
-    return `<details class="time-group" ${index === 0 ? 'open' : ''}>
-      <summary>
-        <span class="hour-label">${String(hour % 24).padStart(2, '0')}:00</span>
-        <span>${hourEvents.length} eventi · ${venues.size} luoghi</span>
-        <span class="details-chevron" aria-hidden="true">›</span>
-      </summary>
-      <div class="time-group-body">${rows}</div>
-    </details>`;
-  }).join('');
+function filterCount() {
+  return Number(Boolean(state.category)) + Number(state.onlyMapped);
 }
 
-function eventRowHtml(event) {
-  return `<article class="event-row">
-    <time>${escapeHtml(shortTime(event.start))}${event.end ? `<small>– ${escapeHtml(shortTime(event.end))}</small>` : ''}</time>
-    <div class="event-copy">
-      <strong>${escapeHtml(event.title)}</strong>
-      <div>${event.category ? `<span>${escapeHtml(event.category)}</span>` : ''}<a href="${escapeHtml(event.url)}" target="_blank" rel="noreferrer">Dettagli ↗</a></div>
-    </div>
-  </article>`;
+function updateFilterBadge() {
+  const count = filterCount();
+  els.filterBadge.hidden = count === 0;
+  els.filterBadge.textContent = count ? String(count) : '';
 }
 
-function renderVenueDetail(events) {
-  const venueEvents = events.filter(event => event.venue === selectedVenue)
-    .sort((a, b) => (a.startMinute ?? 9999) - (b.startMinute ?? 9999));
-  if (!venueEvents.length) {
-    selectedVenue = null;
-    return renderVenueBrowser(events);
-  }
+function scopeText() {
+  const bits = [formatNightRange(state.time)];
+  if (state.category) bits.push(state.category);
+  if (state.onlyMapped) bits.push('solo mappati');
+  if (els.search.value.trim()) bits.push(`“${els.search.value.trim()}”`);
+  return bits.join(' · ');
+}
 
-  const venue = data.venues.find(item => item.name === selectedVenue);
-  const canMap = venue && Number.isFinite(venue.lat) && Number.isFinite(venue.lng);
-  return `<div class="detail-head">
-    <button class="back-button" type="button" data-back>‹ <span>Tutti i luoghi</span></button>
-    <div class="detail-title-row">
-      <div><h2>${escapeHtml(selectedVenue)}</h2><p>${venueEvents.length} ${venueEvents.length === 1 ? 'evento' : 'eventi'} nella selezione corrente</p></div>
-      ${canMap ? '<button class="map-button" type="button" data-show-map>Mostra sulla mappa</button>' : ''}
-    </div>
-  </div>
-  <div class="venue-agenda">${venueEvents.map(eventRowHtml).join('')}</div>`;
+function eventPreviewHtml(event) {
+  return `
+    <span class="event-preview">
+      <time>${escapeHtml(shortTime(event.start))}</time>
+      <span>${escapeHtml(event.title)}</span>
+    </span>
+  `;
+}
+
+function venueCardHtml(name, events) {
+  const ordered = [...events].sort((a, b) => (a.startMinute ?? 9999) - (b.startMinute ?? 9999));
+  const previews = ordered.slice(0, 2);
+  return `
+    <button class="venue-card" type="button" data-open-venue="${escapeHtml(name)}">
+      <span class="venue-card-head">
+        <span class="venue-card-title">${escapeHtml(name)}</span>
+        <span class="venue-card-count">${events.length} ${events.length === 1 ? 'evento' : 'eventi'}</span>
+      </span>
+      ${previews.map(eventPreviewHtml).join('')}
+    </button>
+  `;
+}
+
+function venueEntries(events) {
+  return [...groupBy(events, event => event.venue).entries()]
+    .sort((a, b) => {
+      const aStart = Math.min(...a[1].map(event => event.startMinute ?? 9999));
+      const bStart = Math.min(...b[1].map(event => event.startMinute ?? 9999));
+      return aStart - bStart || a[0].localeCompare(b[0], 'de-CH');
+    });
 }
 
 function emptyStateHtml() {
-  return `<div class="empty-state"><strong>Nessun risultato</strong><span>Prova a cambiare orario, tipo o ricerca.</span><button type="button" data-reset-empty>Reset filtri</button></div>`;
+  return `
+    <div class="empty-state">
+      <strong>Nessun risultato</strong>
+      <p>Prova un altro orario, rimuovi un filtro o cambia ricerca.</p>
+      <button type="button" data-reset-all>Mostra tutto</button>
+    </div>
+  `;
 }
 
-function renderBrowse(events) {
-  if (selectedVenue) els.browseList.innerHTML = renderVenueDetail(events);
-  else els.browseList.innerHTML = browseMode === 'venues' ? renderVenueBrowser(events) : renderTimeBrowser(events);
-
-  els.browseList.querySelectorAll('[data-venue]').forEach(button => button.addEventListener('click', () => {
-    selectedVenue = button.dataset.venue;
-    render();
-    focusVenue(selectedVenue, false);
-  }));
-  els.browseList.querySelector('[data-back]')?.addEventListener('click', () => {
-    selectedVenue = null;
-    render();
-  });
-  els.browseList.querySelector('[data-show-map]')?.addEventListener('click', () => focusVenue(selectedVenue, true));
-  els.browseList.querySelector('[data-reset-empty]')?.addEventListener('click', resetFilters);
+function renderSearchResults(events) {
+  const entries = venueEntries(events);
+  if (!entries.length) return emptyStateHtml();
+  return `
+    <div class="search-results-heading">${entries.length} ${entries.length === 1 ? 'luogo trovato' : 'luoghi trovati'}</div>
+    <section class="section">
+      ${entries.map(([name, venueEvents]) => venueCardHtml(name, venueEvents)).join('')}
+    </section>
+  `;
 }
 
-function popupHtml(venue, events) {
-  const shown = [...events].sort((a, b) => (a.startMinute ?? 9999) - (b.startMinute ?? 9999)).slice(0, 5);
-  return `<div class="popup"><h3>${escapeHtml(venue)}</h3>${shown.map(event => `<div class="pevent"><time>${escapeHtml(event.time)}</time><div>${escapeHtml(event.title)}</div></div>`).join('')}${events.length > shown.length ? `<div class="popup-more">+ ${events.length - shown.length} altri</div>` : ''}</div>`;
+function renderTonight(events) {
+  if (!events.length) return emptyStateHtml();
+  if (els.search.value.trim()) return renderSearchResults(events);
+
+  if (state.time.key !== 'all') {
+    const entries = venueEntries(events);
+    const visible = state.expandedHours.has(state.time.key) ? entries : entries.slice(0, 8);
+    return `
+      <section class="section">
+        <div class="section-heading">
+          <h2>${escapeHtml(state.time.key === 'now' ? 'Adesso' : hourLabel(Math.floor(state.time.from / 60)))}</h2>
+          <span>${events.length} eventi · ${entries.length} luoghi</span>
+        </div>
+        ${visible.map(([name, venueEvents]) => venueCardHtml(name, venueEvents)).join('')}
+        ${entries.length > visible.length ? `<button class="more-button" type="button" data-expand-hour="${escapeHtml(state.time.key)}">Mostra altri ${entries.length - visible.length} luoghi</button>` : ''}
+      </section>
+    `;
+  }
+
+  const byHour = groupBy(events, event => Math.floor((event.startMinute ?? NIGHT_END) / 60));
+  const hours = [...byHour.keys()].filter(hour => hour >= 18 && hour <= 25).sort((a, b) => a - b);
+  if (!hours.length) return renderSearchResults(events);
+
+  return hours.map(hour => {
+    const hourEvents = byHour.get(hour);
+    const entries = venueEntries(hourEvents);
+    const expanded = state.expandedHours.has(String(hour));
+    const visible = expanded ? entries : entries.slice(0, 5);
+    return `
+      <section class="section" id="hour-${hour}">
+        <div class="section-heading">
+          <h2>${hourLabel(hour)}</h2>
+          <span>${hourEvents.length} eventi · ${entries.length} luoghi</span>
+        </div>
+        ${visible.map(([name, venueEvents]) => venueCardHtml(name, venueEvents)).join('')}
+        ${entries.length > visible.length ? `<button class="more-button" type="button" data-expand-hour="${hour}">Mostra altri ${entries.length - visible.length} luoghi</button>` : ''}
+      </section>
+    `;
+  }).join('');
 }
 
-function renderMap(events) {
-  const venueMap = new Map(data.venues.map(venue => [venue.name, venue]));
+function normalizedLetter(name) {
+  const normalized = name.normalize('NFD').replace(/\p{Diacritic}/gu, '').trim();
+  const first = normalized.charAt(0).toUpperCase();
+  return /[A-Z]/.test(first) ? first : '#';
+}
+
+function nextTime(events) {
+  const sorted = [...events].sort((a, b) => (a.startMinute ?? 9999) - (b.startMinute ?? 9999));
+  return shortTime(sorted[0]?.start);
+}
+
+function placeRowHtml(name, events) {
+  const categories = [...new Set(events.map(event => event.category).filter(Boolean))].slice(0, 2);
+  const subtitle = `${events.length} ${events.length === 1 ? 'evento' : 'eventi'}${categories.length ? ` · ${categories.join(' · ')}` : ''}`;
+  return `
+    <button class="place-row" type="button" data-open-venue="${escapeHtml(name)}">
+      <span>
+        <strong>${escapeHtml(name)}</strong>
+        <small>${escapeHtml(subtitle)}</small>
+      </span>
+      <span class="next-time">${escapeHtml(nextTime(events))}</span>
+      <span class="chevron" aria-hidden="true">›</span>
+    </button>
+  `;
+}
+
+function renderVenues(events) {
+  const entries = venueEntries(events).sort((a, b) => a[0].localeCompare(b[0], 'de-CH'));
+  if (!entries.length) return emptyStateHtml();
+
+  const byLetter = groupBy(entries, entry => normalizedLetter(entry[0]));
+  return [...byLetter.entries()].map(([letter, letterEntries]) => `
+    <section class="letter-section">
+      <h2 class="letter-heading">${escapeHtml(letter)}</h2>
+      ${letterEntries.map(([name, venueEvents]) => placeRowHtml(name, venueEvents)).join('')}
+    </section>
+  `).join('');
+}
+
+function renderBrowser() {
+  const events = filteredEvents();
   const groups = groupBy(events, event => event.venue);
 
-  for (const marker of markers.values()) marker.remove();
-  markers.clear();
-  const bounds = [];
+  els.summary.textContent = `${events.length} eventi · ${groups.size} luoghi`;
+  els.scopeLabel.textContent = scopeText();
+  els.browserContent.innerHTML = state.tab === 'venues'
+    ? renderVenues(events)
+    : renderTonight(events);
 
+  bindBrowserActions();
+}
+
+function bindBrowserActions() {
+  els.browserContent.querySelectorAll('[data-open-venue]').forEach(button => {
+    button.addEventListener('click', () => openVenue(button.dataset.openVenue));
+  });
+
+  els.browserContent.querySelectorAll('[data-expand-hour]').forEach(button => {
+    button.addEventListener('click', () => {
+      state.expandedHours.add(button.dataset.expandHour);
+      renderBrowser();
+    });
+  });
+
+  els.browserContent.querySelector('[data-reset-all]')?.addEventListener('click', resetAll);
+}
+
+function markerIcon(count) {
+  return L.divIcon({
+    className: '',
+    html: `<div class="marker-badge">${count}</div>`,
+    iconSize: [42, 42],
+    iconAnchor: [21, 21],
+    popupAnchor: [0, -20]
+  });
+}
+
+function mapCardHtml(name, events) {
+  const ordered = [...events].sort((a, b) => (a.startMinute ?? 9999) - (b.startMinute ?? 9999));
+  const previews = ordered.slice(0, 2);
+  return `
+    <div class="map-card-head">
+      <div>
+        <h2>${escapeHtml(name)}</h2>
+        <div class="map-meta">${events.length} ${events.length === 1 ? 'evento' : 'eventi'} nel filtro corrente</div>
+      </div>
+      <button class="icon-button" type="button" data-close-map-card aria-label="Chiudi">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17"/></svg>
+      </button>
+    </div>
+    <div class="map-preview-list">
+      ${previews.map(event => `
+        <div class="map-preview">
+          <time>${escapeHtml(shortTime(event.start))}</time>
+          <span>${escapeHtml(event.title)}</span>
+        </div>
+      `).join('')}
+    </div>
+    <button class="agenda-button" type="button" data-map-open-agenda>Vedi agenda</button>
+  `;
+}
+
+function clearMarkerSelection() {
+  for (const marker of markerByVenue.values()) {
+    marker.getElement()?.querySelector('.marker-badge')?.classList.remove('is-selected');
+  }
+}
+
+function selectMapVenue(name, events) {
+  state.mapVenue = name;
+  clearMarkerSelection();
+  markerByVenue.get(name)?.getElement()?.querySelector('.marker-badge')?.classList.add('is-selected');
+  els.mapCard.innerHTML = mapCardHtml(name, events);
+  els.mapCard.hidden = false;
+  els.mapCard.querySelector('[data-close-map-card]')?.addEventListener('click', () => {
+    state.mapVenue = null;
+    clearMarkerSelection();
+    els.mapCard.hidden = true;
+  });
+  els.mapCard.querySelector('[data-map-open-agenda]')?.addEventListener('click', () => openVenue(name));
+}
+
+function renderMap() {
+  if (!map || !markerLayer) return;
+  const events = filteredEvents();
+  const groups = groupBy(events, event => event.venue);
+  const venues = new Map(data.venues.map(venue => [venue.name, venue]));
+
+  markerLayer.clearLayers();
+  markerByVenue.clear();
+  els.mapCard.hidden = true;
+  state.mapVenue = null;
+
+  const bounds = [];
   for (const [name, venueEvents] of groups) {
-    const venue = venueMap.get(name);
-    if (!map || !venue || !Number.isFinite(venue.lat) || !Number.isFinite(venue.lng)) continue;
-    const icon = L.divIcon({
-      className: '',
-      html: `<div class="marker-badge">${venueEvents.length}</div>`,
-      iconSize: [42, 36], iconAnchor: [21, 18], popupAnchor: [0, -20]
-    });
-    const marker = L.marker([venue.lat, venue.lng], { icon })
-      .addTo(map)
-      .bindPopup(popupHtml(name, venueEvents), { maxHeight: 360 });
-    marker.on('click', () => {
-      if (!mobileMedia.matches) {
-        selectedVenue = name;
-        renderBrowse(events);
-      }
-    });
-    markers.set(name, marker);
+    const venue = venues.get(name);
+    if (!venue || !Number.isFinite(venue.lat) || !Number.isFinite(venue.lng)) continue;
+
+    const marker = L.marker([venue.lat, venue.lng], { icon: markerIcon(venueEvents.length), title: name });
+    marker.on('click', () => selectMapVenue(name, venueEvents));
+    markerLayer.addLayer(marker);
+    markerByVenue.set(name, marker);
     bounds.push([venue.lat, venue.lng]);
   }
 
-  if (!hasFittedMap && map && bounds.length) {
-    map.fitBounds(bounds, { padding: [36, 36], maxZoom: 14 });
-    hasFittedMap = true;
+  if (!mapHasFitted && bounds.length) {
+    map.fitBounds(bounds, { padding: [34, 34], maxZoom: 14 });
+    mapHasFitted = true;
   }
 }
 
-function render() {
-  const events = filteredEvents();
-  const groups = groupBy(events, event => event.venue);
-  els.summary.textContent = `${events.length} eventi · ${groups.size} luoghi`;
-  els.mobileCount.textContent = events.length ? `· ${events.length}` : '';
-  els.reset.disabled = !hasActiveFilters();
-  renderBrowse(events);
-  renderMap(events);
-}
-
-function focusVenue(name, switchMobile = true) {
-  const marker = markers.get(name);
+function focusVenueOnMap(name) {
+  const marker = markerByVenue.get(name);
   if (!marker || !map) return;
-  if (mobileMedia.matches && switchMobile) setMobileView('map');
+
+  if (mobileMedia.matches) setTab('map');
   requestAnimationFrame(() => {
     map.invalidateSize();
-    map.setView(marker.getLatLng(), Math.max(map.getZoom(), 15), { animate: !matchMedia('(prefers-reduced-motion: reduce)').matches });
-    marker.openPopup();
+    const point = marker.getLatLng();
+    map.setView(point, Math.max(map.getZoom(), 16), { animate: !reducedMotion.matches });
+    const venueEvents = groupBy(filteredEvents(), event => event.venue).get(name) || [];
+    selectMapVenue(name, venueEvents);
   });
 }
 
-function setBrowseMode(mode) {
-  browseMode = mode;
-  selectedVenue = null;
-  els.browseTabs.forEach(button => {
-    const active = button.dataset.browseMode === mode;
+function detailAgendaEvents(name) {
+  const query = els.search.value.trim().toLocaleLowerCase('de-CH');
+  return data.events
+    .filter(event => event.venue === name)
+    .filter(event => !state.category || event.category === state.category)
+    .filter(event => !query || `${event.title} ${event.venue} ${event.category || ''}`.toLocaleLowerCase('de-CH').includes(query))
+    .sort((a, b) => (a.startMinute ?? 9999) - (b.startMinute ?? 9999));
+}
+
+function agendaRowHtml(event) {
+  return `
+    <article class="agenda-row">
+      <time>
+        ${escapeHtml(shortTime(event.start))}
+        ${event.end ? `<small>– ${escapeHtml(shortTime(event.end))}</small>` : ''}
+      </time>
+      <div>
+        <strong>${escapeHtml(event.title)}</strong>
+        <div class="agenda-meta">
+          ${event.category ? `<span>${escapeHtml(event.category)}</span>` : ''}
+          <a href="${escapeHtml(event.url)}" target="_blank" rel="noreferrer">Dettagli ↗</a>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function renderDetail(name) {
+  const agendaEvents = detailAgendaEvents(name);
+  const allVenueEvents = data.events.filter(event => event.venue === name);
+  const venue = data.venues.find(item => item.name === name);
+  const mapped = venue && Number.isFinite(venue.lat) && Number.isFinite(venue.lng);
+
+  els.detailMap.hidden = !mapped;
+  els.detailContent.innerHTML = `
+    <div class="detail-hero">
+      <p>Agenda del luogo</p>
+      <h2>${escapeHtml(name)}</h2>
+      <div class="detail-sub">
+        ${agendaEvents.length} ${agendaEvents.length === 1 ? 'evento visibile' : 'eventi visibili'}
+        ${agendaEvents.length !== allVenueEvents.length ? ` · ${allVenueEvents.length} in totale` : ''}
+      </div>
+    </div>
+    <div class="agenda">
+      ${agendaEvents.length ? agendaEvents.map(agendaRowHtml).join('') : emptyStateHtml()}
+    </div>
+  `;
+  els.detailContent.querySelector('[data-reset-all]')?.addEventListener('click', () => {
+    resetAll();
+    renderDetail(name);
+  });
+}
+
+function openVenue(name, { pushHistory = true } = {}) {
+  state.venue = name;
+  renderDetail(name);
+  els.detailView.hidden = false;
+  document.body.classList.add('detail-open');
+
+  if (pushHistory) {
+    history.pushState({ venue: name }, '');
+    detailWasPushed = true;
+  }
+  requestAnimationFrame(() => els.detailBack.focus());
+}
+
+function closeVenue({ fromHistory = false } = {}) {
+  if (els.detailView.hidden) return;
+  state.venue = null;
+  els.detailView.hidden = true;
+  document.body.classList.remove('detail-open');
+
+  if (!fromHistory && detailWasPushed) {
+    detailWasPushed = false;
+    history.back();
+  }
+}
+
+function setTab(tab) {
+  state.tab = tab;
+  document.body.dataset.tab = tab;
+
+  els.tabButtons.forEach(button => {
+    const active = button.dataset.tabTarget === tab;
     button.classList.toggle('is-active', active);
-    button.setAttribute('aria-pressed', String(active));
+    if (active) button.setAttribute('aria-current', 'page');
+    else button.removeAttribute('aria-current');
   });
-  render();
-}
 
-function setMobileView(view) {
-  document.body.dataset.mobileView = view;
-  els.mobileTabs.forEach(button => {
-    const active = button.dataset.mobileTarget === view;
+  els.desktopTabs.forEach(button => {
+    const target = button.dataset.desktopTab;
+    const active = target === tab || (tab === 'map' && target === 'tonight');
     button.classList.toggle('is-active', active);
-    button.setAttribute('aria-pressed', String(active));
+    button.setAttribute('aria-selected', String(active));
   });
-  if (view === 'map') requestAnimationFrame(() => map?.invalidateSize());
+
+  if (tab !== 'map') renderBrowser();
+  if (tab === 'map') requestAnimationFrame(() => map?.invalidateSize());
 }
 
-function resetFilters() {
+function resetAll() {
   els.search.value = '';
-  els.category.value = '';
-  els.onlyMapped.checked = false;
-  activeTime = { from: NIGHT_START, to: NIGHT_END, key: 'all' };
-  selectedVenue = null;
-  updateTimeButtons();
+  state.time = { key: 'all', from: NIGHT_START, to: NIGHT_END, label: 'Tutta la notte' };
+  state.category = '';
+  state.onlyMapped = false;
+  state.expandedHours.clear();
+  syncFilterForm();
+  updateTimeRail();
+  updateFilterBadge();
   render();
 }
 
-els.search.addEventListener('input', () => { selectedVenue = null; render(); });
-els.category.addEventListener('change', () => { selectedVenue = null; render(); });
-els.onlyMapped.addEventListener('change', () => { selectedVenue = null; render(); });
-els.reset.addEventListener('click', resetFilters);
-els.browseTabs.forEach(button => button.addEventListener('click', () => setBrowseMode(button.dataset.browseMode)));
-els.mobileTabs.forEach(button => button.addEventListener('click', () => setMobileView(button.dataset.mobileTarget)));
-mobileMedia.addEventListener?.('change', () => map?.invalidateSize());
+function render() {
+  updateFilterBadge();
+  renderBrowser();
+  renderMap();
+}
+
+function syncFilterForm() {
+  const categoryRadio = els.categoryOptions.querySelector(`input[name="category"][value="${CSS.escape(state.category)}"]`);
+  if (categoryRadio) categoryRadio.checked = true;
+  els.mappedFilter.checked = state.onlyMapped;
+}
+
+function openFilters() {
+  syncFilterForm();
+  if (typeof els.filterDialog.showModal === 'function') els.filterDialog.showModal();
+  else els.filterDialog.setAttribute('open', '');
+}
+
+function closeFilters() {
+  if (typeof els.filterDialog.close === 'function') els.filterDialog.close();
+  else els.filterDialog.removeAttribute('open');
+}
+
+function setupFilters() {
+  const categories = [...new Set(data.events.map(event => event.category).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b, 'de-CH'));
+
+  const options = [{ value: '', label: 'Tutti i tipi' }, ...categories.map(category => ({ value: category, label: category }))];
+  els.categoryOptions.innerHTML = options.map((option, index) => `
+    <label class="radio-row">
+      <span>${escapeHtml(option.label)}</span>
+      <input type="radio" name="category" value="${escapeHtml(option.value)}" ${index === 0 ? 'checked' : ''} />
+    </label>
+  `).join('');
+
+  els.openFilterButtons.forEach(button => button.addEventListener('click', openFilters));
+  els.closeFilterButtons.forEach(button => button.addEventListener('click', closeFilters));
+
+  els.filterDialog.addEventListener('click', event => {
+    if (event.target === els.filterDialog) closeFilters();
+  });
+
+  els.filterForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const selected = new FormData(els.filterForm).get('category');
+    state.category = typeof selected === 'string' ? selected : '';
+    state.onlyMapped = els.mappedFilter.checked;
+    state.expandedHours.clear();
+    closeFilters();
+    render();
+  });
+
+  els.clearFilters.addEventListener('click', () => {
+    const allTypes = els.categoryOptions.querySelector('input[name="category"][value=""]');
+    if (allTypes) allTypes.checked = true;
+    els.mappedFilter.checked = false;
+  });
+}
+
+function setDesktopTab(tab) {
+  if (tab !== 'tonight' && tab !== 'venues') return;
+  setTab(tab);
+}
+
+els.search.addEventListener('input', () => {
+  state.expandedHours.clear();
+  render();
+});
+
+els.tabButtons.forEach(button => {
+  button.addEventListener('click', () => setTab(button.dataset.tabTarget));
+});
+
+els.desktopTabs.forEach(button => {
+  button.addEventListener('click', () => setDesktopTab(button.dataset.desktopTab));
+});
+
+els.detailBack.addEventListener('click', () => closeVenue());
+els.detailMap.addEventListener('click', () => {
+  const name = state.venue;
+  closeVenue();
+  if (name) setTimeout(() => focusVenueOnMap(name), reducedMotion.matches ? 0 : 80);
+});
+
+window.addEventListener('popstate', () => {
+  if (!els.detailView.hidden) {
+    detailWasPushed = false;
+    closeVenue({ fromHistory: true });
+  }
+});
+
+window.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !els.detailView.hidden) closeVenue();
+});
+
+mobileMedia.addEventListener?.('change', () => {
+  requestAnimationFrame(() => map?.invalidateSize());
+});
 
 async function main() {
-  setupTimeStrip();
+  setupTimeRail();
   setupMap();
+
   try {
     const response = await fetch(DATA_URL, { cache: 'no-store' });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     data = await response.json();
-    const categories = [...new Set(data.events.map(event => event.category).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'de-CH'));
-    categories.forEach(category => els.category.add(new Option(category, category)));
+
+    setupFilters();
     render();
   } catch (error) {
-    els.summary.textContent = 'Errore dati';
-    els.browseList.innerHTML = `<div class="empty-state"><strong>Impossibile caricare gli eventi</strong><span>${escapeHtml(error.message)}</span><button type="button" data-reload>Ricarica</button></div>`;
-    els.browseList.querySelector('[data-reload]')?.addEventListener('click', () => location.reload());
+    els.summary.textContent = 'Impossibile caricare il programma';
+    els.scopeLabel.textContent = '';
+    els.browserContent.innerHTML = `
+      <div class="error-state">
+        <strong>Qualcosa non ha funzionato</strong>
+        <p>${escapeHtml(error.message)}</p>
+        <button type="button" data-reload>Riprova</button>
+      </div>
+    `;
+    els.browserContent.querySelector('[data-reload]')?.addEventListener('click', () => location.reload());
   }
 }
 
