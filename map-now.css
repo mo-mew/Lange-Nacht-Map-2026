@@ -1,0 +1,152 @@
+.map-now-control {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  margin-top: 12px !important;
+  margin-right: 12px !important;
+}
+.map-now-control button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 1px solid var(--separator);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  font-size: 13px;
+  font-weight: 740;
+}
+.map-now-control button.is-active {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--separator));
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.map-now-control b {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--text);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.map-now-control button.is-active b {
+  background: var(--accent);
+  color: var(--accent-on);
+}
+.map-now-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 17%, transparent);
+}
+
+body.map-now-active .marker-badge,
+body.map-now-active .cluster-badge {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.now-marker-badge {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 3px solid var(--surface);
+  box-shadow: 0 4px 15px rgba(0,0,0,.24);
+  font: 800 12px/1 ui-sans-serif, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.now-marker-badge.is-live {
+  background: var(--accent);
+  color: var(--accent-on);
+}
+.now-marker-badge.is-live::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 2px solid color-mix(in srgb, var(--accent) 42%, transparent);
+  border-radius: 50%;
+}
+.now-marker-badge.is-soon {
+  background: var(--surface);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.now-marker-badge span { transform: translateY(.5px); }
+
+.user-location-dot {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(10,132,255,.17);
+}
+.user-location-dot span {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #0a84ff;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.28);
+}
+.user-accuracy-circle {
+  stroke: #0a84ff;
+  stroke-width: 1.5;
+  stroke-opacity: .42;
+  fill: #0a84ff;
+  fill-opacity: .08;
+}
+
+.map-now-kicker {
+  margin-bottom: 4px;
+  color: var(--accent);
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 820;
+  letter-spacing: .075em;
+}
+.map-now-status {
+  display: block;
+  margin-top: 3px;
+  color: var(--accent);
+  font-size: 11px;
+  line-height: 1.3;
+  font-weight: 740;
+}
+.map-now-preview .event-description {
+  display: -webkit-box;
+  margin-top: 4px;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
+}
+
+@media (max-width: 760px) {
+  .map-now-control {
+    margin-top: 10px !important;
+    margin-right: 10px !important;
+  }
+  .map-now-control button {
+    min-height: 44px;
+    padding: 0 11px;
+  }
+  .map-card {
+    bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom) + 12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .now-marker-badge.is-live::after { animation: none; }
+}
