@@ -35,7 +35,6 @@ let tileLayer;
 let markers = new Map();
 let hasFittedMap = false;
 
-const themeMedia = matchMedia('(prefers-color-scheme: dark)');
 const mobileMedia = matchMedia(MOBILE_QUERY);
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
@@ -56,17 +55,14 @@ function setupMap() {
   }
   map = L.map('map', { zoomControl: true, preferCanvas: true }).setView(ZURICH, 13);
   setBaseLayer();
-  themeMedia.addEventListener?.('change', setBaseLayer);
 }
 
 function setBaseLayer() {
   if (!map) return;
   if (tileLayer) tileLayer.remove();
-  const style = themeMedia.matches ? 'dark' : 'light';
-  tileLayer = L.tileLayer(`https://{s}.basemaps.cartocdn.com/${style}_all/{z}/{x}/{y}{r}.png`, {
-    maxZoom: 20,
-    subdomains: 'abcd',
-    attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+  tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 }
 
