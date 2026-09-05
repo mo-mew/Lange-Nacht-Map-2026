@@ -1,0 +1,15 @@
+{
+  "name": "lange-nacht-zurich-map",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "scrape": "node scripts/scrape.mjs",
+    "serve": "serve .",
+    "dev": "npm run serve"
+  },
+  "dependencies": {
+    "playwright": "1.55.0",
+    "serve": "14.2.4"
+  }
+}
