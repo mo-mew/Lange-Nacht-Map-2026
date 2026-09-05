@@ -44,7 +44,7 @@ function enrichAgenda() {
   });
 
   detail.querySelectorAll('.agenda-meta a').forEach(link => {
-    link.textContent = 'Programma ufficiale ↗';
+    if (link.textContent !== 'Programma ufficiale ↗') link.textContent = 'Programma ufficiale ↗';
   });
 }
 
