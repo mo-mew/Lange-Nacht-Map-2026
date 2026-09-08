@@ -3,42 +3,25 @@
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "Permissions-Policy",
-          "value": "geolocation=(self)"
-        },
-        {
-          "key": "Feature-Policy",
-          "value": "geolocation 'self'"
-        }
+        {"key": "Permissions-Policy", "value": "geolocation=(self)"},
+        {"key": "Feature-Policy", "value": "geolocation 'self'"}
       ]
     },
     {
       "source": "/",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store, max-age=0"
-        }
-      ]
+      "headers": [{"key": "Cache-Control", "value": "no-store, max-age=0"}]
     },
     {
       "source": "/index.html",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store, max-age=0"
-        }
-      ]
+      "headers": [{"key": "Cache-Control", "value": "no-store, max-age=0"}]
     },
     {
-      "source": "/recommendations-v3.js",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store, max-age=0"
-        }
-      ]
+      "source": "/nyc-app.js",
+      "headers": [{"key": "Cache-Control", "value": "no-store, max-age=0"}]
+    },
+    {
+      "source": "/data/nyc-itinerary.json",
+      "headers": [{"key": "Cache-Control", "value": "no-store, max-age=0"}]
     }
   ]
 }
