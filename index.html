@@ -5,82 +5,61 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
-  <meta name="description" content="Esplora gli eventi della Lange Nacht der Zürcher Museen 2026 per orario, luogo e mappa." />
-  <title>Lange Nacht Zürich 2026</title>
+  <meta name="description" content="Itinerario New York 8–13 settembre 2026 con mappa, posizione GPS e link Google Maps." />
+  <title>New York · 8–13 settembre 2026</title>
   <link rel="preconnect" href="https://unpkg.com" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="event-descriptions.css" />
-  <link rel="stylesheet" href="recommendations.css" />
-  <link rel="stylesheet" href="recommendations-v2.css" />
-  <link rel="stylesheet" href="map-now.css" />
+  <link rel="stylesheet" href="nyc-styles.css" />
 </head>
-<body data-tab="tonight">
+<body data-tab="today">
   <div class="app-shell">
     <header class="topbar">
       <div class="title-row">
         <div class="brand">
-          <p>Zürich · 5 settembre</p>
-          <h1>Lange Nacht</h1>
+          <p id="tripTitle">New York · 8–13 settembre 2026</p>
+          <h1>NYC · 6 giorni</h1>
+          <small id="tripSubtitle">6 giorni, fatti bene</small>
         </div>
-        <a class="icon-button official-link" href="https://langenacht-zuerich.ch/programm" target="_blank" rel="noreferrer" aria-label="Apri il programma ufficiale">
-          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-8 8M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>
-        </a>
-      </div>
-
-      <label class="search-bar" for="search">
-        <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
-        <span class="sr-only">Cerca musei ed eventi</span>
-        <input id="search" type="search" placeholder="Cerca musei ed eventi" autocomplete="off" enterkeyhint="search" />
-      </label>
-
-      <div class="scope-row">
-        <div id="timeRail" class="time-rail" role="group" aria-label="Filtra per orario"></div>
-        <button class="filter-button" type="button" data-open-filters aria-label="Apri filtri">
-          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M7 12h10M10 17h4"/></svg>
-          <span>Filtri</span>
-          <b id="filterBadge" hidden></b>
+        <button id="locationButton" class="location-button" type="button" aria-label="Mostra la mia posizione sulla mappa">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          <span id="locationLabel">Posizione</span>
         </button>
       </div>
+      <div id="dayRail" class="day-rail" role="group" aria-label="Scegli giorno"></div>
     </header>
 
     <main class="workspace">
-      <aside class="browser-pane" aria-label="Esplora gli eventi">
-        <div class="desktop-mode" role="tablist" aria-label="Modalità di esplorazione">
-          <button type="button" data-desktop-tab="tonight" class="is-active" aria-selected="true">Stasera</button>
-          <button type="button" data-desktop-tab="venues" aria-selected="false">Luoghi</button>
-        </div>
-
-        <div class="browser-header">
+      <aside class="browser-pane" aria-label="Itinerario">
+        <div class="browser-head">
           <div>
-            <strong id="summary" aria-live="polite">Caricamento…</strong>
-            <p id="scopeLabel">Tutta la notte</p>
+            <strong id="todayLabel">Itinerario</strong>
+            <span>Tappe, pause e posti salvati</span>
           </div>
         </div>
-
-        <div id="browserContent" class="browser-content">
-          <div class="loading-section">
-            <span></span><span></span><span></span>
-          </div>
+        <div id="content" class="content">
+          <div class="fatal-error"><strong>Caricamento itinerario…</strong></div>
         </div>
       </aside>
 
-      <section class="map-pane" aria-label="Mappa dei musei">
+      <section class="map-pane" aria-label="Mappa del viaggio">
         <div id="map"></div>
-        <div id="mapError" class="map-error" hidden></div>
+        <div class="map-controls">
+          <button id="locateButton" type="button">La mia posizione</button>
+          <button id="fitButton" type="button">Vedi giornata</button>
+          <div id="mapStatus" class="map-status" aria-live="polite">Posizione non ancora attiva.</div>
+        </div>
         <article id="mapCard" class="map-card" hidden aria-live="polite"></article>
       </section>
     </main>
 
     <nav class="tabbar" aria-label="Navigazione principale">
-      <button type="button" data-tab-target="tonight" class="is-active" aria-current="page">
-        <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg>
-        <span>Stasera</span>
+      <button type="button" data-tab-target="today" class="is-active" aria-current="page">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 2v4M16 2v4M8 10h8M8 14h5"/></svg>
+        <span>Oggi</span>
       </button>
-      <button type="button" data-tab-target="venues">
-        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 20V6l7-3 7 3v14M9 8h.01M15 8h.01M9 12h.01M15 12h.01M9 16h.01M15 16h.01M3 20h18"/></svg>
-        <span>Luoghi</span>
+      <button type="button" data-tab-target="days">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <span>Giorni</span>
       </button>
       <button type="button" data-tab-target="map">
         <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m4 6 5-2 6 2 5-2v14l-5 2-6-2-5 2V6ZM9 4v14M15 6v14"/></svg>
@@ -89,50 +68,7 @@
     </nav>
   </div>
 
-  <dialog id="filterDialog" class="filter-dialog">
-    <form id="filterForm" class="filter-sheet">
-      <div class="sheet-handle" aria-hidden="true"></div>
-      <div class="sheet-header">
-        <button type="button" class="sheet-close icon-button" data-close-filters aria-label="Chiudi filtri">
-          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17"/></svg>
-        </button>
-        <h2>Filtri</h2>
-        <button id="clearFilters" class="text-button" type="button">Reset</button>
-      </div>
-
-      <fieldset>
-        <legend>Tipo di evento</legend>
-        <div id="categoryOptions" class="option-list"></div>
-      </fieldset>
-
-      <label class="check-row">
-        <span>
-          <strong>Solo luoghi sulla mappa</strong>
-          <small>Nasconde i luoghi senza coordinate.</small>
-        </span>
-        <input id="mappedFilter" type="checkbox" />
-      </label>
-
-      <button class="primary-button" type="submit">Mostra risultati</button>
-    </form>
-  </dialog>
-
-  <section id="detailView" class="detail-view" hidden aria-label="Agenda del luogo">
-    <header class="detail-nav">
-      <button id="detailBack" class="back-button" type="button">
-        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
-        <span>Indietro</span>
-      </button>
-      <button id="detailMap" class="text-button" type="button">Mappa</button>
-    </header>
-    <div id="detailContent" class="detail-content"></div>
-  </section>
-
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-  <script src="map-bootstrap.js"></script>
-  <script type="module" src="app.js"></script>
-  <script type="module" src="recommendations-v3.js"></script>
-  <script type="module" src="map-now.js"></script>
+  <script type="module" src="nyc-app.js"></script>
 </body>
 </html>
