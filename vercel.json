@@ -20,6 +20,14 @@
       "headers": [{"key": "Cache-Control", "value": "no-store, max-age=0"}]
     },
     {
+      "source": "/nyc-plan-update.js",
+      "headers": [{"key": "Cache-Control", "value": "no-store, max-age=0"}]
+    },
+    {
+      "source": "/nyc-extras.js",
+      "headers": [{"key": "Cache-Control", "value": "no-store, max-age=0"}]
+    },
+    {
       "source": "/data/nyc-itinerary.json",
       "headers": [{"key": "Cache-Control", "value": "no-store, max-age=0"}]
     }
