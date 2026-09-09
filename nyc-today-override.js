@@ -67,3 +67,38 @@ window.fetch = async (...args) => {
     return response;
   }
 };
+
+function commonsImage(file) {
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=1600`;
+}
+
+function commonsPage(file) {
+  return `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(file)}`;
+}
+
+function patchTodayGallery() {
+  const activeDate = document.querySelector('#dayRail .day-chip.is-active')?.dataset.date;
+  if (activeDate !== '2026-09-09') return;
+  const cards = [...document.querySelectorAll('.nyc-gallery .nyc-carousel-card')];
+  if (cards.length < 3) return;
+
+  const replacements = [
+    ['Little Island', 'Little Island-NYC.jpg'],
+    ['High Line', 'High Line Nyc.jpg']
+  ];
+
+  replacements.forEach(([title, file], index) => {
+    const card = cards[index];
+    if (!card || card.dataset.todayGallery === file) return;
+    card.dataset.todayGallery = file;
+    const image = card.querySelector('img');
+    const strong = card.querySelector('strong');
+    const link = card.querySelector('a');
+    if (image) { image.src = commonsImage(file); image.alt = title; }
+    if (strong) strong.textContent = title;
+    if (link) link.href = commonsPage(file);
+  });
+}
+
+new MutationObserver(() => requestAnimationFrame(patchTodayGallery))
+  .observe(document.documentElement, { childList: true, subtree: true });
