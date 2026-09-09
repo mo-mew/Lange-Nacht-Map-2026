@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
-  <meta name="description" content="Itinerario New York 8–13 settembre 2026 con mappa, posizione GPS e link Google Maps." />
+  <meta name="description" content="Itinerario New York 8–13 settembre 2026, organizzato per quartiere, con mappa, posizione GPS e link Google Maps." />
   <title>New York · 8–13 settembre 2026</title>
   <link rel="preconnect" href="https://unpkg.com" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="nyc-styles.css" />
-  <link rel="stylesheet" href="nyc-extras.css?v=20260908a" />
+  <link rel="stylesheet" href="nyc-extras.css?v=20260909-geography" />
 </head>
 <body data-tab="today">
   <div class="app-shell">
@@ -19,7 +19,7 @@
         <div class="brand">
           <p id="tripTitle">New York · 8–13 settembre 2026</p>
           <h1>NYC · 6 giorni</h1>
-          <small id="tripSubtitle">6 giorni, fatti bene</small>
+          <small id="tripSubtitle">Quartieri vicini, giornate senza zig-zag</small>
         </div>
         <button id="locationButton" class="location-button" type="button" aria-label="Mostra la mia posizione sulla mappa">
           <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
@@ -28,20 +28,11 @@
       </div>
       <div id="dayRail" class="day-rail" role="group" aria-label="Scegli giorno"></div>
     </header>
-
     <main class="workspace">
       <aside class="browser-pane" aria-label="Itinerario">
-        <div class="browser-head">
-          <div>
-            <strong id="todayLabel">Itinerario</strong>
-            <span>Tappe, pause e posti salvati</span>
-          </div>
-        </div>
-        <div id="content" class="content">
-          <div class="fatal-error"><strong>Caricamento itinerario…</strong></div>
-        </div>
+        <div class="browser-head"><div><strong id="todayLabel">Itinerario</strong><span>Tappe, pause e posti salvati</span></div></div>
+        <div id="content" class="content"><div class="fatal-error"><strong>Caricamento itinerario…</strong></div></div>
       </aside>
-
       <section class="map-pane" aria-label="Mappa del viaggio">
         <div id="map"></div>
         <div class="map-controls">
@@ -52,27 +43,14 @@
         <article id="mapCard" class="map-card" hidden aria-live="polite"></article>
       </section>
     </main>
-
     <nav class="tabbar" aria-label="Navigazione principale">
-      <button type="button" data-tab-target="today" class="is-active" aria-current="page">
-        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 2v4M16 2v4M8 10h8M8 14h5"/></svg>
-        <span>Oggi</span>
-      </button>
-      <button type="button" data-tab-target="days">
-        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-        <span>Giorni</span>
-      </button>
-      <button type="button" data-tab-target="map">
-        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m4 6 5-2 6 2 5-2v14l-5 2-6-2-5 2V6ZM9 4v14M15 6v14"/></svg>
-        <span>Mappa</span>
-      </button>
+      <button type="button" data-tab-target="today" class="is-active" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 2v4M16 2v4M8 10h8M8 14h5"/></svg><span>Oggi</span></button>
+      <button type="button" data-tab-target="days"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Giorni</span></button>
+      <button type="button" data-tab-target="map"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m4 6 5-2 6 2 5-2v14l-5 2-6-2-5 2V6ZM9 4v14M15 6v14"/></svg><span>Mappa</span></button>
     </nav>
   </div>
-
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="nyc-plan-update.js?v=20260909a"></script>
-  <script src="nyc-today-override.js?v=20260909b"></script>
   <script type="module" src="nyc-app.js"></script>
-  <script type="module" src="nyc-extras.js?v=20260908a"></script>
+  <script type="module" src="nyc-extras.js?v=20260909-geography"></script>
 </body>
 </html>

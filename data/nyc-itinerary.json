@@ -1,27 +1,26 @@
 {
   "title": "New York · 8–13 settembre 2026",
-  "subtitle": "6 giorni, fatti bene",
+  "subtitle": "Quartieri vicini, giornate senza zig-zag",
   "timezone": "America/New_York",
   "startDate": "2026-09-08",
   "endDate": "2026-09-13",
-  "note": "Downtown, Wall Street, Battery, 9/11 Memorial e vista della Statua dal ferry sono già coperti.",
-  "weatherUpdated": "2026-09-08T07:57:00-04:00",
+  "revision": "20260909-geography",
+  "weatherUpdated": "2026-09-09T08:48:00-04:00",
+  "note": "Downtown, Wall Street, Battery, 9/11 Memorial, vista della Statua dal ferry, Rockefeller Center e St. Patrick’s sono già coperti. Percorsi raggruppati per zona. Gli orari proposti non sono prenotazioni; i tempi a piedi e con i mezzi sono stime, non indicazioni in tempo reale.",
   "days": [
     {
-      "date": "2026-09-08",
-      "weekday": "Martedì",
-      "number": "01",
+      "date": "2026-09-08", "weekday": "Martedì", "number": "01",
       "title": "Central Park + The Met",
       "short": "Central Park South → Upper East Side · 09:30–16:30 · ~7 ore con pranzo e pausa",
       "vibe": ["ICONIC NYC", "LANDSCAPE", "MASTERPIECES", "UPPER EAST SIDE"],
-      "weather": {"high": 29, "low": 21, "summary": "Soleggiato / poco nuvoloso.", "impact": "Ottimo per Central Park al mattino; il Met nel pomeriggio evita le ore più calde."},
+      "weather": {"high":29,"low":21,"summary":"Soleggiato / poco nuvoloso.","impact":"Previsione originaria del giorno 8, conservata come riferimento.","updatedAt":"2026-09-08T07:57:00-04:00"},
       "logic": "Partenza dal settore sud-est di Central Park, salita graduale verso Bethesda Terrace e Bow Bridge, pranzo sulla Upper East Side e pomeriggio al Met. Giornata lineare, senza trasferimenti in metro tra le tappe principali.",
       "stops": [
         {"time":"09:30","name":"Grand Army Plaza + The Pond","description":"Ingresso da Fifth Avenue. The Pond e Gapstow Bridge, con vista sullo skyline meridionale del parco.","lat":40.76453,"lng":-73.97306,"mapsQuery":"Grand Army Plaza, New York, NY"},
         {"time":"10:10","name":"The Mall","description":"Cammino lungo il viale alberato verso Bethesda Terrace.","lat":40.77235,"lng":-73.97114,"mapsQuery":"The Mall and Literary Walk, Central Park, New York, NY"},
         {"time":"10:30","name":"Bethesda Terrace","description":"Terrazza, Arcade e fontana.","lat":40.77397,"lng":-73.97097,"mapsQuery":"Bethesda Terrace, New York, NY"},
         {"time":"10:55","name":"Bow Bridge + The Lake","description":"Passaggio sul ponte e 25–30 minuti di sosta sulla riva del lago.","lat":40.77504,"lng":-73.97183,"mapsQuery":"Bow Bridge, New York, NY"},
-        {"time":"11:50","name":"Pranzo Upper East Side","description":"Un’ora circa, preferibilmente tra Madison e Lexington.","lat":40.77620,"lng":-73.96050,"mapsQuery":"Upper East Side, New York, NY"},
+        {"time":"11:50","name":"Pranzo Upper East Side","description":"Un’ora circa, preferibilmente tra Madison e Lexington.","lat":40.7762,"lng":-73.9605,"mapsQuery":"Upper East Side, New York, NY"},
         {"time":"13:00","name":"The Metropolitan Museum of Art","description":"2½–3 ore. Temple of Dendur → European Paintings → American Wing; aggiungi una sola sezione in base all’interesse.","lat":40.77944,"lng":-73.96324,"mapsQuery":"The Metropolitan Museum of Art, 1000 5th Ave, New York, NY"},
         {"time":"16:00","name":"Met Steps + Museum Mile","description":"Uscita tranquilla, breve passeggiata su Fifth Avenue e fine giornata.","lat":40.77965,"lng":-73.96312,"mapsQuery":"Museum Mile, Fifth Avenue, New York, NY"}
       ],
@@ -34,152 +33,154 @@
         {"name":"Le Pain Quotidien · Madison","description":"Pranzo leggero e rapido.","mapsQuery":"Le Pain Quotidien Madison Avenue Upper East Side, New York, NY"}
       ],
       "routeUrl": "https://www.google.com/maps/dir/Grand+Army+Plaza,+New+York,+NY/Bethesda+Terrace,+New+York,+NY/Bow+Bridge,+New+York,+NY/The+Metropolitan+Museum+of+Art,+1000+5th+Ave,+New+York,+NY/",
-      "note": "Oggi ha senso partire presto dal parco: nel pomeriggio fa più caldo e il museo offre una seconda parte indoor."
+      "note": "Giornata precedente conservata: nessuna nuova visita è stata spostata qui.",
+      "gallery": [{"title":"Bethesda Terrace","file":"Bethesda terrace (11143p).jpg"},{"title":"The Met","file":"The MET.jpg"}]
     },
     {
-      "date": "2026-09-09",
-      "weekday": "Mercoledì",
-      "number": "02",
-      "title": "MoMA + Midtown",
-      "short": "53rd Street → Rockefeller → Grand Central · 10:30–17:30 · ~7 ore",
-      "vibe": ["MoMA", "ART DÉCO", "FIFTH AVENUE", "MIDTOWN"],
-      "weather": {"high": 31, "low": 23, "summary": "Nuvole e sole, molto caldo.", "impact": "Bene MoMA + Midtown; limita le camminate lunghe nelle ore centrali."},
-      "logic": "Il giorno più caldo della settimana è costruito con una lunga parte indoor al MoMA e spostamenti brevi tra Rockefeller Center, Fifth Avenue, Bryant Park e Grand Central.",
+      "date": "2026-09-09", "weekday": "Mercoledì", "number": "02",
+      "title": "Little Island → Chelsea → MoMA",
+      "short": "West Side verso nord → Midtown · da Little Island, fine al MoMA verso le 17:00 · un solo trasferimento",
+      "vibe": ["HUDSON", "CHELSEA", "HIGH LINE", "MoMA"],
+      "weather": {"high":30,"low":23,"code":2,"summary":"Nuvole e sole, caldo.","impact":"Con tempo asciutto: waterfront e High Line prima del museo. MoMA nel pomeriggio; niente seconda maratona dopo la visita.","updatedAt":"2026-09-09T08:48:00-04:00"},
+      "logic": "Si parte da Little Island, non si torna a una tappa precedente. Pranzo a Chelsea Market PRIMA di risalire la High Line verso la 30th Street; da lì un solo trasferimento al MoMA. Rockefeller Center e St. Patrick’s sono esclusi. Il Whitney è una scelta vicina in sostituzione di parte della passeggiata, non un obbligo aggiuntivo.",
       "stops": [
-        {"time":"10:30","name":"MoMA","description":"2½ ore. Collezione moderna/contemporanea e una sola mostra temporanea.","lat":40.76143,"lng":-73.97762,"mapsQuery":"Museum of Modern Art, New York, NY"},
-        {"time":"13:00","name":"Pranzo Midtown","description":"45–60 minuti tra MoMA e Rockefeller Center.","lat":40.75970,"lng":-73.97920,"mapsQuery":"Midtown Manhattan, New York, NY"},
-        {"time":"14:15","name":"Rockefeller Center","description":"Lower Plaza, Channel Gardens e 30 Rock.","lat":40.75874,"lng":-73.97867,"mapsQuery":"Rockefeller Center, New York, NY"},
-        {"time":"14:45","name":"St. Patrick’s Cathedral","description":"Facciata e interno della cattedrale.","lat":40.75846,"lng":-73.97601,"mapsQuery":"St. Patrick's Cathedral, New York, NY"},
-        {"time":"15:15","name":"Bryant Park + NYPL","description":"Cammino verso sud su Fifth Avenue con passaggio davanti alla biblioteca.","lat":40.75360,"lng":-73.98323,"mapsQuery":"Bryant Park, New York, NY"},
-        {"time":"16:15","name":"Grand Central Terminal","description":"Main Concourse, soffitto astronomico, orologio centrale e passaggi.","lat":40.75273,"lng":-73.97723,"mapsQuery":"Grand Central Terminal, New York, NY"},
-        {"time":"17:00","name":"Chrysler Building","description":"Ultima tappa breve dall’esterno.","lat":40.75162,"lng":-73.97550,"mapsQuery":"Chrysler Building, New York, NY"}
+        {"time":"Da qui","name":"Little Island","description":"Completa la visita senza fretta. Gli orari del mattino sono flessibili: il punto fermo è il MoMA nel pomeriggio.","lat":40.74205,"lng":-74.01078,"mapsQuery":"Little Island, New York, NY"},
+        {"time":"Pranzo","name":"Chelsea Market","description":"Pranzo anticipato, circa 45–60 minuti. Il mercato è nella parte SUD di Chelsea: fermati prima di proseguire a nord, non tornare qui da Hudson Yards.","lat":40.74244,"lng":-74.00614,"mapsQuery":"Chelsea Market, 75 9th Avenue, New York, NY"},
+        {"time":"Poi","name":"High Line · accesso 16th Street","description":"Sali vicino a Chelsea Market e cammina verso nord. 45–60 minuti con soste, da accorciare se la mattina si è allungata.","lat":40.74366,"lng":-74.00714,"mapsQuery":"High Line 16th Street entrance, New York, NY"},
+        {"time":"Entro 13:15","name":"High Line · uscita 30th Street","description":"Fine della passeggiata. Lascia circa 35–45 minuti per arrivare al MoMA, inclusi accessi ai mezzi e attese. Non è necessario percorrere tutto il parco.","lat":40.75233,"lng":-74.00185,"mapsQuery":"High Line West 30th Street entrance, New York, NY"},
+        {"time":"14:00–17:00","name":"MoMA","description":"Circa tre ore per una selezione della collezione e una mostra. Orario proposto, non prenotato. Mercoledì 10:30–17:30; le gallerie iniziano a chiudere circa 15 minuti prima. Qui finisce il programma principale.","lat":40.76143,"lng":-73.97762,"mapsQuery":"Museum of Modern Art, 11 W 53rd St, New York, NY"}
       ],
-      "pause": "20–30 minuti nello Sculpture Garden del MoMA oppure a Bryant Park.",
+      "pause": "Little Island e il pranzo sono le pause principali. Dopo MoMA non ci sono altre visite obbligatorie.",
       "restaurants": [
-        {"name":"The Modern · Bar Room","description":"Dentro il MoMA; comodo se vuoi evitare spostamenti.","mapsQuery":"The Modern, New York, NY"},
-        {"name":"Urban Hawker","description":"Food hall del Sud-est asiatico; veloce e con molta scelta.","mapsQuery":"Urban Hawker, New York, NY"},
-        {"name":"Jupiter","description":"Italiano contemporaneo nel Rockefeller Center.","mapsQuery":"Jupiter Rockefeller Center, New York, NY"},
-        {"name":"Le Rock","description":"Brasserie francese al Rockefeller Center.","mapsQuery":"Le Rock, New York, NY"},
-        {"name":"Joe & The Juice · Bryant Park","description":"Opzione leggera se preferisci mangiare più tardi.","mapsQuery":"Joe & The Juice Bryant Park, New York, NY"}
+        {"name":"Chelsea Market","description":"Pranzo prima di risalire la High Line.","mapsQuery":"Chelsea Market, 75 9th Avenue, New York, NY"},
+        {"name":"The Modern · Bar Room","description":"Alternativa al pranzo a Chelsea: mangiare in zona MoMA, non entrambi.","mapsQuery":"The Modern, 9 W 53rd St, New York, NY"}
       ],
-      "routeUrl": "https://www.google.com/maps/dir/Museum+of+Modern+Art,+New+York,+NY/Rockefeller+Center,+New+York,+NY/St.+Patrick%E2%80%99s+Cathedral,+New+York,+NY/Bryant+Park,+New+York,+NY/Grand+Central+Terminal,+New+York,+NY/",
-      "note": "Opzione sera: Top of the Rock può essere aggiunto separatamente verso il tramonto."
+      "note": "Se è già tardi, salta o accorcia la High Line e vai direttamente al MoMA: nessuna corsa per recuperare gli orari. Whitney: solo in sostituzione di tempo sulla High Line. I luoghi serali sono salvati tra le alternative, non nel percorso principale.",
+      "alternatives": [
+        {"time":"Prima di Chelsea","name":"Whitney Museum · alternativa vicina","description":"A circa 5–10 minuti a piedi da Little Island. Aperto mercoledì 10:30–18:00. Una visita mirata di 60–90 minuti sostituisce parte della High Line; non deve comprimere le tre ore al MoMA.","lat":40.73959,"lng":-74.00886,"mapsQuery":"Whitney Museum of American Art, 99 Gansevoort Street, New York, NY","kind":"Sostituzione, non tappa extra","sourceUrl":"https://whitney.org/visit"},
+        {"time":"Solo se resta energia","name":"Bryant Park + NYPL","description":"Passeggiata facoltativa dopo MoMA, circa 20–25 minuti per arrivare. Si può terminare qui; nessun obbligo di aggiungere Grand Central.","lat":40.7536,"lng":-73.98323,"mapsQuery":"Bryant Park, New York, NY","kind":"Opzione serale"},
+        {"time":"Alternativa serale","name":"Grand Central + Chrysler esterno","description":"Da Bryant Park circa 10–15 minuti. Main Concourse e poi Chrysler dall’esterno: sono un unico piccolo gruppo in Midtown East, non tappe necessarie dopo MoMA.","lat":40.75273,"lng":-73.97723,"mapsQuery":"Grand Central Terminal, New York, NY","kind":"Opzione serale"}
+      ],
+      "legs": [
+        {"fromStop":0,"toStop":1,"mode":"walking","estimate":"8–12 min a piedi, stima"},
+        {"fromStop":1,"toStop":2,"mode":"walking","estimate":"5–8 min a piedi, stima"},
+        {"fromStop":2,"toStop":3,"mode":"walking","estimate":"45–60 min lungo la High Line, soste incluse"},
+        {"fromStop":3,"toStop":4,"mode":"transit","estimate":"35–45 min porta a porta, stima; controlla il percorso al momento"}
+      ],
+      "gallery": [{"title":"High Line","file":"High Line 20th Street looking downtown.jpg"},{"title":"MoMA","file":"MoMA exterior (1629399048).jpg"}],
+      "sources": ["https://www.moma.org/visit/","https://whitney.org/visit"],
+      "routeUrl": "https://www.google.com/maps/dir/?api=1&origin=Little+Island%2C+New+York%2C+NY&destination=Museum+of+Modern+Art%2C+11+W+53rd+St%2C+New+York%2C+NY&waypoints=Chelsea+Market%2C+75+9th+Avenue%2C+New+York%2C+NY%7CHigh+Line+16th+Street+entrance%2C+New+York%2C+NY%7CHigh+Line+West+30th+Street+entrance%2C+New+York%2C+NY"
     },
     {
-      "date": "2026-09-10",
-      "weekday": "Giovedì",
-      "number": "03",
-      "title": "SoHo + Chinatown + Lower East Side",
-      "short": "SoHo → Chinatown → LES · 10:30–16:30 · ~6 ore",
-      "vibe": ["CAST IRON", "FOOD", "TENEMENT", "STREET LIFE"],
-      "weather": {"high": 29, "low": 20, "summary": "Possibili temporali.", "impact": "Giornata flessibile; Tenement + Essex Market restano il nucleo indoor."},
-      "logic": "Quartieri compatti, diversi luoghi coperti e un tour al Tenement Museum come punto fermo indoor.",
+      "date": "2026-09-10", "weekday": "Giovedì", "number": "03",
+      "title": "Village → SoHo → Chinatown → LES",
+      "short": "Quartieri contigui di Lower Manhattan · 10:00–16:30 · a piedi, con pause",
+      "vibe": ["VILLAGE", "CAST IRON", "CHINATOWN", "LOWER EAST SIDE"],
+      "weather": {"high":32,"low":21,"code":95,"summary":"Caldo; possibilità di temporali.","impact":"Il giro si accorcia facilmente: con rovesci elimina parte di Village/SoHo e usa Tenement ed Essex Market. Non attraversare la città per inseguire il sole.","updatedAt":"2026-09-09T08:48:00-04:00"},
+      "logic": "Il Village esce dal sabato a Brooklyn e si collega ai quartieri immediatamente a sud ed est. Una sola progressione a piedi: Village, SoHo, Chinatown, Lower East Side. Nessun trasferimento al Guggenheim. Le vie indicate sono una selezione, non una lista da esaurire.",
       "stops": [
-        {"time":"10:30","name":"SoHo Cast-Iron District","description":"Greene Street, Mercer, Crosby e Broome. Circa 60–75 minuti tra facciate, negozi e gallerie.","lat":40.72439,"lng":-74.00295,"mapsQuery":"Greene Street SoHo, New York, NY"},
-        {"time":"11:45","name":"Chinatown · Doyers Street","description":"Mott, Pell, Doyers e Canal; poi verso East Broadway.","lat":40.71439,"lng":-73.99808,"mapsQuery":"Doyers Street, New York, NY"},
-        {"time":"12:30","name":"Pranzo Chinatown / Two Bridges","description":"Una delle zone migliori del viaggio per pranzare bene senza deviazioni.","lat":40.71310,"lng":-73.99450,"mapsQuery":"Two Bridges, New York, NY"},
-        {"time":"13:45","name":"Tenement Museum","description":"Tour guidato di 60–75 minuti. Scegli un solo tour.","lat":40.71878,"lng":-73.99002,"mapsQuery":"Tenement Museum, 103 Orchard St, New York, NY"},
-        {"time":"15:10","name":"Orchard Street + Essex Market","description":"Passeggiata e sosta al mercato coperto; ottimo buffer in caso di pioggia.","lat":40.71805,"lng":-73.98815,"mapsQuery":"Essex Market, New York, NY"},
-        {"time":"16:00","name":"Pier 35","description":"Breve chiusura sul waterfront se è asciutto.","lat":40.71088,"lng":-73.98464,"mapsQuery":"Pier 35, New York, NY"}
+        {"time":"10:00","name":"West Village · Grove e Bedford","description":"Circa un’ora tra Grove, Bedford e le strade vicine, poi direzione SoHo. Washington Square è un’alternativa, non un altro giro completo da aggiungere.","lat":40.73296,"lng":-74.00409,"mapsQuery":"Grove Street and Bedford Street, New York, NY"},
+        {"time":"11:15","name":"SoHo · Greene e Broome","description":"45–60 minuti tra facciate in ghisa, una galleria o un negozio. Continua verso Chinatown, senza tornare al Village.","lat":40.72297,"lng":-74.00103,"mapsQuery":"Greene Street and Broome Street, New York, NY"},
+        {"time":"12:30","name":"Chinatown · Doyers Street + pranzo","description":"Mott, Pell e Doyers, poi pranzo in zona. Riserva circa 90 minuti fra passeggiata e sosta; scegli un locale, non più deviazioni.","lat":40.71439,"lng":-73.99808,"mapsQuery":"Doyers Street, New York, NY"},
+        {"time":"14:30","name":"Tenement Museum","description":"Un tour di circa 60–75 minuti SOLO se trovi e prenoti la fascia adatta. Il museo si visita con tour guidato; arriva 10 minuti prima. Senza prenotazione, dedica questo blocco a Orchard Street ed Essex Market.","lat":40.71878,"lng":-73.99002,"mapsQuery":"Tenement Museum, 103 Orchard St, New York, NY"},
+        {"time":"16:00","name":"Orchard Street + Essex Market","description":"Pausa conclusiva sotto copertura. Fine entro circa le 16:30, senza aggiungere Museum Mile o un altro waterfront.","lat":40.71805,"lng":-73.98815,"mapsQuery":"Essex Market, 88 Essex St, New York, NY"}
       ],
-      "pause": "30 minuti dopo il Tenement Museum, su Orchard Street o dentro Essex Market.",
+      "pause": "Pranzo lungo a Chinatown; sosta finale a Essex Market. Con temporali si tagliano le camminate, non le pause.",
       "restaurants": [
-        {"name":"Kopitiam","description":"Malese/Nyonya, informale e coerente con il tragitto verso LES.","mapsQuery":"Kopitiam, New York, NY"},
-        {"name":"Spicy Village","description":"Noodles e cucina Henan; essenziale e veloce.","mapsQuery":"Spicy Village, New York, NY"},
-        {"name":"Wu’s Wonton King","description":"Cantonese, wonton e piatti da condividere.","mapsQuery":"Wu's Wonton King, New York, NY"},
-        {"name":"Golden Diner","description":"Diner asiatico-americano; possibile attesa.","mapsQuery":"Golden Diner, New York, NY"},
-        {"name":"Essex Market","description":"Molte scelte sotto lo stesso tetto; ottimo piano B con pioggia.","mapsQuery":"Essex Market, New York, NY"}
+        {"name":"Kopitiam","description":"Opzione salvata per il tratto Chinatown–LES.","mapsQuery":"Kopitiam, New York, NY"},
+        {"name":"Spicy Village","description":"Opzione salvata vicino a Forsyth Street.","mapsQuery":"Spicy Village, New York, NY"},
+        {"name":"Essex Market","description":"Alternativa coperta al pranzo; orari dei singoli banchi da verificare.","mapsQuery":"Essex Market, New York, NY"}
       ],
-      "routeUrl": "https://www.google.com/maps/dir/Greene+Street,+SoHo,+New+York,+NY/Doyers+Street,+New+York,+NY/Tenement+Museum,+Orchard+Street,+New+York,+NY/Essex+Market,+New+York,+NY/Pier+35,+New+York,+NY/",
-      "note": "Se arriva il temporale, accorcia SoHo e Pier 35; tieni Tenement Museum + Essex Market come nucleo."
+      "note": "Guggenheim spostato a domenica con Storia Naturale. Pier 35 non è più una tappa obbligatoria. La fascia del Tenement è una proposta: disponibilità non verificata e nessun biglietto acquistato.",
+      "alternatives": [{"time":"Al posto del primo giro","name":"Washington Square Park","description":"Alternativa a Grove/Bedford prima di SoHo: scegli uno dei due inizi, non entrambi se vuoi una mattina breve.","lat":40.73082,"lng":-73.99733,"mapsQuery":"Washington Square Park, New York, NY","kind":"Sostituzione locale"}],
+      "legs": [
+        {"fromStop":0,"toStop":1,"mode":"walking","estimate":"15–20 min a piedi, stima"},
+        {"fromStop":1,"toStop":2,"mode":"walking","estimate":"15–20 min a piedi, stima"},
+        {"fromStop":2,"toStop":3,"mode":"walking","estimate":"15–20 min a piedi, stima"},
+        {"fromStop":3,"toStop":4,"mode":"walking","estimate":"5 min a piedi, stima"}
+      ],
+      "gallery": [{"title":"SoHo","file":"SoHo - Cast Iron Facade.jpg"},{"title":"Chinatown","file":"Doyers Street Chinatown.jpg"},{"title":"Tenement Museum","file":"Tenement Museum.jpg"}],
+      "sources": ["https://www.tenement.org/plan-a-visit/"],
+      "routeUrl": "https://www.google.com/maps/dir/?api=1&origin=Grove+Street+and+Bedford+Street%2C+New+York%2C+NY&destination=Essex+Market%2C+88+Essex+St%2C+New+York%2C+NY&waypoints=Greene+Street+and+Broome+Street%2C+New+York%2C+NY%7CDoyers+Street%2C+New+York%2C+NY%7CTenement+Museum%2C+103+Orchard+St%2C+New+York%2C+NY&travelmode=walking"
     },
     {
-      "date": "2026-09-11",
-      "weekday": "Venerdì",
-      "number": "04",
-      "title": "Roosevelt Island + Noguchi + Astoria",
-      "short": "Roosevelt Island → Astoria waterfront · 09:45–16:30 · ~6¾ ore",
-      "vibe": ["TRAM", "ARCHITECTURE", "NOGUCHI", "WATERFRONT"],
-      "weather": {"high": 29, "low": 19, "summary": "Prevalentemente soleggiato.", "impact": "Adatta a Roosevelt Island, ferry, Noguchi e Socrates."},
-      "logic": "La giornata più design/architecture: tram aereo, Four Freedoms Park, ferry verso Queens, Noguchi Museum e Socrates Sculpture Park.",
+      "date": "2026-09-11", "weekday": "Venerdì", "number": "04",
+      "title": "Roosevelt Island → Astoria waterfront",
+      "short": "Tram aereo → isola → ferry → Noguchi e Socrates · 09:45–16:30 · un asse sull’East River",
+      "vibe": ["TRAM", "LOUIS KAHN", "NOGUCHI", "WATERFRONT"],
+      "weather": {"high":28,"low":19,"summary":"Più fresco.","impact":"Mantieni i blocchi all’aperto se asciutto. Con maltempo evita la parte esposta sull’isola e raggiungi direttamente Noguchi e Astoria.","updatedAt":"2026-09-09T08:48:00-04:00"},
+      "logic": "Questa giornata aveva già un filo geografico: dal tram a Roosevelt Island, poi ferry per Astoria e due luoghi vicini a piedi. Nessun rientro a Manhattan fra Noguchi e Socrates. Il ferry è un trasferimento da verificare, non una corsa prenotata alle 12:00.",
       "stops": [
-        {"time":"09:45","name":"Roosevelt Island Tramway","description":"Partenza da 59th Street / 2nd Avenue.","lat":40.76142,"lng":-73.96463,"mapsQuery":"Roosevelt Island Tramway, New York, NY"},
-        {"time":"10:10","name":"Four Freedoms Park","description":"Passeggiata fino all’estremità sud dell’isola e memoriale di Louis Kahn.","lat":40.75068,"lng":-73.96017,"mapsQuery":"Franklin D. Roosevelt Four Freedoms State Park, New York, NY"},
-        {"time":"11:30","name":"Roosevelt Island Ferry Landing","description":"Rientro verso il ferry landing a piedi oppure con Red Bus gratuito.","lat":40.75574,"lng":-73.95357,"mapsQuery":"Roosevelt Island Ferry Terminal, New York, NY"},
-        {"time":"12:00","name":"Ferry verso Astoria","description":"Breve traversata sull’East River; controlla l’orario nell’app NYC Ferry.","lat":40.76803,"lng":-73.93274,"mapsQuery":"Astoria Ferry Terminal, Queens, NY"},
-        {"time":"12:20","name":"Pranzo Astoria waterfront","description":"Circa un’ora.","lat":40.76810,"lng":-73.93380,"mapsQuery":"Hallets Cove, Astoria, Queens, NY"},
-        {"time":"13:35","name":"The Noguchi Museum","description":"90 minuti tra gallerie, sculture, Akari e giardino.","lat":40.76684,"lng":-73.93811,"mapsQuery":"The Noguchi Museum, Queens, NY"},
-        {"time":"15:15","name":"Socrates Sculpture Park","description":"Ultima ora all’aperto sul waterfront.","lat":40.76853,"lng":-73.93689,"mapsQuery":"Socrates Sculpture Park, Queens, NY"}
+        {"time":"09:45","name":"Roosevelt Island Tramway · Manhattan","description":"Partenza da 59th Street / 2nd Avenue. Considera anche l’attesa al tram e la camminata verso il settore sud dell’isola.","lat":40.76142,"lng":-73.96463,"mapsQuery":"Roosevelt Island Tramway Manhattan Station, New York, NY"},
+        {"time":"10:30","name":"Four Freedoms Park","description":"Memoriale di Louis Kahn e waterfront. Circa 45 minuti; non una corsa lungo tutta l’isola.","lat":40.75068,"lng":-73.96017,"mapsQuery":"Franklin D. Roosevelt Four Freedoms State Park, New York, NY"},
+        {"time":"11:30 circa","name":"Roosevelt Island Ferry Landing","description":"Raggiungi l’imbarco e controlla la prossima corsa della linea Astoria. Attese e servizio possono cambiare.","lat":40.75574,"lng":-73.95357,"mapsQuery":"Roosevelt Island Ferry Terminal, New York, NY"},
+        {"time":"Dopo il ferry","name":"Astoria Ferry Landing + pranzo","description":"Pranzo sul tratto verso Noguchi. Tieni un margine di circa un’ora: il pomeriggio può slittare senza aggiungere trasferimenti.","lat":40.76803,"lng":-73.93274,"mapsQuery":"Astoria Ferry Terminal, Queens, NY"},
+        {"time":"14:00 circa","name":"The Noguchi Museum","description":"90 minuti tra sculture, architettura e giardino. Orario ordinario mercoledì–domenica 11:00–18:00; ultimo ingresso 17:30.","lat":40.76684,"lng":-73.93811,"mapsQuery":"The Noguchi Museum, 9-01 33rd Road, Queens, NY"},
+        {"time":"15:45","name":"Socrates Sculpture Park","description":"Chiusura sul waterfront, a pochi minuti dal Noguchi. Finisci qui verso le 16:30.","lat":40.76853,"lng":-73.93689,"mapsQuery":"Socrates Sculpture Park, Queens, NY"}
       ],
-      "pause": "Giardino del Noguchi + waterfront di Socrates: due soste naturali senza aggiungere altri luoghi.",
-      "restaurants": [
-        {"name":"Château le Woof","description":"Caffè molto vicino al ferry e al waterfront.","mapsQuery":"Chateau le Woof, Astoria, NY"},
-        {"name":"Vesta Trattoria","description":"Italiano di quartiere; più da pranzo seduto.","mapsQuery":"Vesta Trattoria, Astoria, NY"},
-        {"name":"Little Flower Cafe","description":"Caffè e cucina afghana contemporanea.","mapsQuery":"Little Flower Cafe Queens, NY"},
-        {"name":"Astoria Seafood","description":"Pesce scelto al banco e cucinato al momento.","mapsQuery":"Astoria Seafood, Queens, NY"},
-        {"name":"Compton’s","description":"Sandwich e comfort food; utile per un pranzo rapido.","mapsQuery":"Compton's Astoria, NY"}
+      "pause": "Pranzo ad Astoria e giardino del Noguchi. Non aggiungere una tappa a Midtown al rientro.",
+      "restaurants": [{"name":"Château le Woof","description":"Opzione salvata sul waterfront di Astoria.","mapsQuery":"Chateau le Woof, Astoria, NY"},{"name":"Vesta Trattoria","description":"Alternativa di quartiere; verifica gli orari di pranzo.","mapsQuery":"Vesta Trattoria, Astoria, NY"}],
+      "note": "L’orario del ferry va letto sul servizio ufficiale il giorno stesso. I tempi del pomeriggio sono flessibili; niente deviazione al Whitney.",
+      "legs": [
+        {"fromStop":0,"toStop":1,"mode":"transit","estimate":"Tram + circa 20–25 min a piedi; aggiungi l’attesa"},
+        {"fromStop":1,"toStop":2,"mode":"walking","estimate":"15–20 min a piedi, stima"},
+        {"fromStop":2,"toStop":3,"mode":"transit","estimate":"Ferry linea Astoria: orario e attesa da verificare","sourceUrl":"https://www.ferry.nyc/routes-and-schedules/astoria/"},
+        {"fromStop":3,"toStop":4,"mode":"walking","estimate":"10–15 min a piedi, stima, oltre alla pausa pranzo"},
+        {"fromStop":4,"toStop":5,"mode":"walking","estimate":"5 min a piedi, stima"}
       ],
-      "routeUrl": "https://www.google.com/maps/dir/Roosevelt+Island+Tramway,+New+York,+NY/FDR+Four+Freedoms+State+Park,+New+York,+NY/Roosevelt+Island+Ferry+Landing,+New+York,+NY/The+Noguchi+Museum,+Queens,+NY/Socrates+Sculpture+Park,+Queens,+NY/",
-      "note": "11 settembre: Downtown resta fuori; hai già visitato il Memorial e eviti la zona delle commemorazioni mattutine."
+      "gallery": [{"title":"Roosevelt Island Tramway","file":"Roosevelt Island Tramway from above.jpg"},{"title":"Four Freedoms Park","file":"FDR Four Freedoms Park.jpg"},{"title":"Noguchi Museum","file":"Noguchi Museum.JPG"}],
+      "sources": ["https://www.noguchi.org/museum/visit/","https://www.ferry.nyc/routes-and-schedules/astoria/"],
+      "routeUrl": "https://www.google.com/maps/dir/?api=1&origin=Roosevelt+Island+Tramway+Manhattan+Station%2C+New+York%2C+NY&destination=Socrates+Sculpture+Park%2C+Queens%2C+NY&waypoints=Franklin+D.+Roosevelt+Four+Freedoms+State+Park%2C+New+York%2C+NY%7CAstoria+Ferry+Terminal%2C+Queens%2C+NY%7CThe+Noguchi+Museum%2C+9-01+33rd+Road%2C+Queens%2C+NY"
     },
     {
-      "date": "2026-09-12",
-      "weekday": "Sabato",
-      "number": "05",
-      "title": "Brooklyn Bridge + DUMBO + Brooklyn Heights + Village",
-      "short": "City Hall → Brooklyn → West Village · 09:30–17:00 · ~7½ ore",
-      "vibe": ["BROOKLYN BRIDGE", "DUMBO", "BROWNSTONES", "VILLAGE"],
-      "weather": {"high": 27, "low": 20, "summary": "Parzialmente soleggiato.", "impact": "Buono per Brooklyn Bridge, DUMBO e Village; porta acqua."},
-      "logic": "Prima parte interamente a Brooklyn; dopo pranzo rientro in metro verso il Village. Red Hook resta fuori perché è previsto domenica.",
+      "date": "2026-09-12", "weekday": "Sabato", "number": "05",
+      "title": "Brooklyn Bridge → DUMBO → Brooklyn Heights",
+      "short": "Attraversamento del ponte e poi solo Brooklyn · 09:30–15:30/16:00 · quasi tutto a piedi",
+      "vibe": ["BROOKLYN BRIDGE", "DUMBO", "WATERFRONT", "BROWNSTONES"],
+      "weather": {"high":27,"low":21,"code":2,"summary":"Sole e qualche nuvola.","impact":"Giornata dedicata all’aperto: ponte, parco sul fiume e Promenade, con pranzo e soste vere.","updatedAt":"2026-09-09T08:48:00-04:00"},
+      "logic": "Dal lato Manhattan attraversa il ponte UNA volta e resta a Brooklyn. DUMBO, pranzo, Brooklyn Bridge Park e Brooklyn Heights si susseguono lungo il waterfront. Il Village è spostato a giovedì: non si prende la metro per un secondo programma dopo pranzo.",
       "stops": [
-        {"time":"09:30","name":"Brooklyn Bridge · City Hall","description":"Attraversamento da City Hall verso Brooklyn.","lat":40.71273,"lng":-74.00597,"mapsQuery":"Brooklyn Bridge City Hall, New York, NY"},
-        {"time":"10:20","name":"DUMBO · Washington Street","description":"Washington Street, Main Street Park, Empire Fulton Ferry e waterfront.","lat":40.70332,"lng":-73.98958,"mapsQuery":"Washington Street DUMBO, Brooklyn, NY"},
-        {"time":"11:20","name":"Brooklyn Heights Promenade","description":"Belvedere e breve circuito tra le strade residenziali.","lat":40.69609,"lng":-73.99701,"mapsQuery":"Brooklyn Heights Promenade, Brooklyn, NY"},
-        {"time":"12:15","name":"Pranzo Brooklyn","description":"Un’ora circa.","lat":40.69730,"lng":-73.99350,"mapsQuery":"Brooklyn Heights, Brooklyn, NY"},
-        {"time":"13:30","name":"Metro verso Greenwich Village","description":"Trasferimento unico della giornata.","lat":40.73082,"lng":-73.99733,"mapsQuery":"Washington Square Park, New York, NY"},
-        {"time":"14:15","name":"Washington Square Park","description":"Arco, piazza e passaggio da Washington Mews.","lat":40.73082,"lng":-73.99733,"mapsQuery":"Washington Square Park, New York, NY"},
-        {"time":"15:00","name":"West Village","description":"Grove, Bedford, Commerce, Christopher Street e Hudson River Park.","lat":40.73400,"lng":-74.00670,"mapsQuery":"West Village, New York, NY"},
-        {"time":"16:30","name":"Christopher Street Pier","description":"Fine giornata sul waterfront; Little Island se resta energia.","lat":40.73352,"lng":-74.01208,"mapsQuery":"Christopher Street Pier, New York, NY"}
+        {"time":"09:30","name":"Brooklyn Bridge · ingresso City Hall","description":"Attraversamento verso Brooklyn, circa 45–60 minuti con foto. Se il meteo cambia, non forzare il ponte esposto.","lat":40.71273,"lng":-74.00597,"mapsQuery":"Brooklyn Bridge Pedestrian Walkway entrance City Hall, New York, NY"},
+        {"time":"10:45","name":"DUMBO · Washington Street","description":"Washington Street, Main Street Park ed Empire Fulton Ferry. Circa un’ora senza aggiungere un altro quartiere.","lat":40.70332,"lng":-73.98958,"mapsQuery":"Washington Street DUMBO, Brooklyn, NY"},
+        {"time":"12:00","name":"Pranzo DUMBO","description":"Pausa di un’ora. Time Out Market è un punto di riferimento salvato in zona, non una prenotazione.","lat":40.70334,"lng":-73.99199,"mapsQuery":"Time Out Market New York, 55 Water Street, Brooklyn, NY"},
+        {"time":"13:15","name":"Brooklyn Bridge Park · Pier 1","description":"Passeggiata sul fiume verso sud; 30–45 minuti con sosta all’ombra.","lat":40.70222,"lng":-73.9966,"mapsQuery":"Brooklyn Bridge Park Pier 1, Brooklyn, NY"},
+        {"time":"14:15","name":"Brooklyn Heights Promenade","description":"Belvedere, poi un breve giro di brownstones fra le strade vicine. Fine libera intorno alle 15:30–16:00.","lat":40.69609,"lng":-73.99701,"mapsQuery":"Brooklyn Heights Promenade, Brooklyn, NY"}
       ],
-      "pause": "30–40 minuti sulla Promenade o sul waterfront di Brooklyn; seconda pausa libera al Village.",
-      "restaurants": [
-        {"name":"Juliana’s","description":"Pizza classica a DUMBO; possibile attesa.","mapsQuery":"Juliana's Pizza Brooklyn, NY"},
-        {"name":"Time Out Market","description":"Molte opzioni e vista; utile se il gruppo vuole cose diverse.","mapsQuery":"Time Out Market New York, Brooklyn, NY"},
-        {"name":"Henry’s End","description":"Ristorante storico di Brooklyn Heights.","mapsQuery":"Henry's End Brooklyn, NY"},
-        {"name":"Daily Provisions · West Village","description":"Se preferisci spostare il pranzo dopo la metro.","mapsQuery":"Daily Provisions West Village, New York, NY"},
-        {"name":"Joseph Leonard","description":"Bistrot nel West Village; adatto a pranzo seduto.","mapsQuery":"Joseph Leonard, New York, NY"}
+      "pause": "Pranzo a DUMBO e una vera sosta a Pier 1 o sulla Promenade. Non riempire il pomeriggio con altri spostamenti.",
+      "restaurants": [{"name":"Juliana’s","description":"Opzione salvata a DUMBO; eventuali code possono allungare il pranzo.","mapsQuery":"Juliana’s Pizza, 19 Old Fulton St, Brooklyn, NY"},{"name":"Time Out Market","description":"Alternativa con più opzioni nello stesso edificio.","mapsQuery":"Time Out Market New York, Brooklyn, NY"}],
+      "note": "Niente Village dopo Brooklyn e niente deviazione obbligatoria a Red Hook. La giornata si conclude a Brooklyn Heights.",
+      "legs": [
+        {"fromStop":0,"toStop":1,"mode":"walking","estimate":"60–75 min complessivi con attraversamento, uscita e foto"},
+        {"fromStop":1,"toStop":2,"mode":"walking","estimate":"5–10 min a piedi, stima"},
+        {"fromStop":2,"toStop":3,"mode":"walking","estimate":"10–15 min a piedi, stima"},
+        {"fromStop":3,"toStop":4,"mode":"walking","estimate":"15–20 min a piedi, stima"}
       ],
-      "routeUrl": "https://www.google.com/maps/dir/Brooklyn+Bridge+City+Hall,+New+York,+NY/Washington+Street,+DUMBO,+Brooklyn,+NY/Brooklyn+Heights+Promenade,+Brooklyn,+NY/",
-      "note": "Il trasferimento Brooklyn → Village è l’unico salto geografico importante; tutto il resto è a piedi."
+      "gallery": [{"title":"Brooklyn Bridge","file":"Brooklyn Bridge from Manhattan.JPG","credit":"Gary Stange","license":"CC BY-SA 3.0"},{"title":"Brooklyn Heights Promenade","file":"Brooklyn Heights Promenade (13678381963).jpg","credit":"Daniel","license":"CC BY 2.0"}],
+      "routeUrl": "https://www.google.com/maps/dir/?api=1&origin=Brooklyn+Bridge+Pedestrian+Walkway+entrance+City+Hall%2C+New+York%2C+NY&destination=Brooklyn+Heights+Promenade%2C+Brooklyn%2C+NY&waypoints=Washington+Street+DUMBO%2C+Brooklyn%2C+NY%7CTime+Out+Market+New+York%2C+55+Water+Street%2C+Brooklyn%2C+NY%7CBrooklyn+Bridge+Park+Pier+1%2C+Brooklyn%2C+NY&travelmode=walking"
     },
     {
-      "date": "2026-09-13",
-      "weekday": "Domenica",
-      "number": "06",
-      "title": "Whitney + High Line + Red Hook / Pioneer Works",
-      "short": "Meatpacking → Red Hook · 10:30–17:30 · ~7 ore",
-      "vibe": ["WHITNEY", "HIGH LINE", "RED HOOK", "OPEN STUDIOS"],
-      "weather": {"high": 28, "low": 22, "summary": "Possibilità di temporale.", "impact": "Whitney e Pioneer Works restano validi; High Line/Little Island sono il blocco da tagliare se piove."},
-      "logic": "Ultimo giorno costruito intorno a Whitney al mattino e Pioneer Works nel pomeriggio. La parte all’aperto può essere accorciata se peggiora il meteo.",
+      "date": "2026-09-13", "weekday": "Domenica", "number": "06",
+      "title": "Storia Naturale → Guggenheim",
+      "short": "Upper West Side → Central Park → Upper East Side · 10:00–16:30 · due musei, un solo attraversamento",
+      "vibe": ["DINOSAURI", "CENTRAL PARK", "FRANK LLOYD WRIGHT", "MUSEUM MILE"],
+      "weather": {"high":28,"low":21,"code":95,"summary":"Possibili rovesci e temporali.","impact":"Due musei nella stessa fascia di Manhattan. Se piove: bus o taxi fra i lati del parco. Se asciutto: attraversamento a piedi; nessun obbligo di stare fuori.","updatedAt":"2026-09-09T08:48:00-04:00"},
+      "logic": "La giornata resta intorno a Central Park, tra la 79th e la 89th Street. Tre ore allo Storia Naturale, pranzo senza fretta, un solo attraversamento verso la Upper East Side e 90 minuti al Guggenheim. Non ci sono più Whitney, Meatpacking o Brooklyn nel percorso principale.",
       "stops": [
-        {"time":"10:30","name":"Whitney Museum","description":"2 ore circa tra collezione, mostre temporanee e terrazze.","lat":40.73959,"lng":-74.00886,"mapsQuery":"Whitney Museum of American Art, New York, NY"},
-        {"time":"12:30","name":"Pranzo Meatpacking / Chelsea","description":"45–60 minuti.","lat":40.74260,"lng":-74.00600,"mapsQuery":"Meatpacking District, New York, NY"},
-        {"time":"13:30","name":"High Line","description":"Solo tratto meridionale.","lat":40.74162,"lng":-74.00856,"mapsQuery":"High Line, Gansevoort Street, New York, NY"},
-        {"time":"14:00","name":"Little Island","description":"Parte del blocco outdoor; tagliala se piove.","lat":40.74205,"lng":-74.01078,"mapsQuery":"Little Island, New York, NY"},
-        {"time":"14:30","name":"Trasferimento verso Red Hook","description":"Taxi/rideshare è la scelta più semplice; ferry solo se gli orari coincidono bene.","lat":40.67965,"lng":-74.01109,"mapsQuery":"Pioneer Works, Brooklyn, NY"},
-        {"time":"15:00","name":"Pioneer Works · Second Sundays","description":"Mostre, open studios, workshop, musica e spazi industriali.","lat":40.67965,"lng":-74.01109,"mapsQuery":"Pioneer Works, Brooklyn, NY"},
-        {"time":"17:15","name":"Louis Valentino Jr. Park & Pier","description":"Breve passeggiata finale sul waterfront se il meteo regge.","lat":40.67860,"lng":-74.01822,"mapsQuery":"Louis Valentino Jr. Park and Pier, Brooklyn, NY"}
+        {"time":"10:00–13:00","name":"American Museum of Natural History","description":"Tre ore, scegliendo dinosauri, balena blu e una sezione di interesse. Aperto 10:00–17:30. Butterfly Vivarium e ristorante Gilder risultano chiusi fino al 18 settembre: non pianificarli come tappe. Controlla gli avvisi prima di acquistare.","lat":40.78132,"lng":-73.97399,"mapsQuery":"American Museum of Natural History, 200 Central Park West, New York, NY"},
+        {"time":"13:00–14:00","name":"Pranzo Upper West Side","description":"Un’ora in zona Columbus/Amsterdam, vicino al museo. Daily Provisions è un’opzione salvata; si resta qui prima di attraversare il parco.","lat":40.78221,"lng":-73.97755,"mapsQuery":"Daily Provisions, 375 Amsterdam Avenue, New York, NY"},
+        {"time":"15:00–16:30","name":"Solomon R. Guggenheim Museum","description":"Edificio di Frank Lloyd Wright e una selezione delle mostre effettivamente aperte. Orario ordinario 10:30–17:30; fascia proposta, non prenotata. Dopo la visita si conclude sulla Upper East Side.","lat":40.783,"lng":-73.95895,"mapsQuery":"Solomon R. Guggenheim Museum, 1071 5th Avenue, New York, NY"}
       ],
-      "pause": "Le terrazze del Whitney e gli spazi liberi di Pioneer Works permettono di tenere la giornata leggera anche con due istituzioni culturali.",
-      "restaurants": [
-        {"name":"Da Andrea Chelsea","description":"Italiano, servizio al tavolo; utile prima di High Line.","mapsQuery":"Da Andrea Chelsea, New York, NY"},
-        {"name":"Cookshop","description":"Brunch/pranzo stagionale; prenotazione consigliata.","mapsQuery":"Cookshop, New York, NY"},
-        {"name":"Empire Diner","description":"Diner storico reinterpretato; logisticamente molto comodo.","mapsQuery":"Empire Diner, New York, NY"},
-        {"name":"Market 57","description":"Food hall con più opzioni; rapido e flessibile.","mapsQuery":"Market 57, New York, NY"},
-        {"name":"Red Hook Tavern","description":"Se preferisci spostare il pranzo a Brooklyn.","mapsQuery":"Red Hook Tavern, Brooklyn, NY"}
+      "pause": "Un’ora di pranzo fra i musei. Il trasferimento ha un margine dedicato, non viene sottratto al tempo di visita.",
+      "restaurants": [{"name":"Daily Provisions · Upper West Side","description":"Opzione salvata per il pranzo vicino allo Storia Naturale.","mapsQuery":"Daily Provisions, 375 Amsterdam Avenue, New York, NY"},{"name":"Butterfield Market · Madison","description":"Alternativa se preferisci pranzare DOPO aver attraversato il parco; non due pranzi.","mapsQuery":"Butterfield Market, 1150 Madison Avenue, New York, NY"}],
+      "note": "Pioneer Works è escluso dal percorso principale: Second Sundays è realmente domenica 13, ma inserirlo dopo i due musei ricreerebbe il problema. Resta salvato solo come ALTERNATIVA all’intera giornata, non come terza tappa.",
+      "alternatives": [{"time":"In sostituzione della giornata","name":"Pioneer Works · Second Sundays","description":"Alternativa a entrambi i musei: scegli una domenica interamente a Red Hook. Evento 13 settembre 12:00–18:00; open studios 14:00–16:00. Non accodarlo al Guggenheim. Le visite a Storia Naturale e Guggenheim andrebbero riprogrammate o rinunciate.","lat":40.67965,"lng":-74.01109,"mapsQuery":"Pioneer Works, 159 Pioneer Street, Brooklyn, NY","kind":"Alternativa all’intera giornata","sourceUrl":"https://pioneerworks.org/programs/second-sundays-september-2026"}],
+      "legs": [
+        {"fromStop":0,"toStop":1,"mode":"walking","estimate":"8–12 min a piedi, stima"},
+        {"fromStop":1,"toStop":2,"mode":"transit","estimate":"Tra 14:00 e 15:00: riserva 35–50 min con attese e camminate. Bus crosstown M79 + tratto a piedi, oppure taxi. Se asciutto, circa 40–50 min a piedi attraverso il parco.","walkingAlternative":true}
       ],
-      "routeUrl": "https://www.google.com/maps/dir/Whitney+Museum+of+American+Art,+New+York,+NY/Little+Island,+New+York,+NY/Pioneer+Works,+Brooklyn,+NY/Louis+Valentino+Jr.+Park+and+Pier,+Brooklyn,+NY/",
-      "note": "Se aumenta il rischio temporali, accorcia High Line/Little Island e vai prima a Pioneer Works."
+      "gallery": [{"title":"American Museum of Natural History","file":"AMNH-exterior.jpg","credit":"Captain-tucker","license":"CC BY-SA 3.0"},{"title":"Guggenheim · New York","file":"Guggenheim museum exterior.jpg","credit":"Finlay McWalter","license":"CC BY-SA 3.0"}],
+      "sources": ["https://www.amnh.org/plan-your-visit/hours","https://www.amnh.org/plan-your-visit","https://www.guggenheim.org/plan-your-visit","https://pioneerworks.org/programs/second-sundays-september-2026"],
+      "routeUrl": "https://www.google.com/maps/dir/?api=1&origin=American+Museum+of+Natural+History%2C+200+Central+Park+West%2C+New+York%2C+NY&destination=Solomon+R.+Guggenheim+Museum%2C+1071+5th+Avenue%2C+New+York%2C+NY&waypoints=Daily+Provisions%2C+375+Amsterdam+Avenue%2C+New+York%2C+NY"
     }
   ]
 }
