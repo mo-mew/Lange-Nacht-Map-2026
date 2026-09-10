@@ -1,5 +1,5 @@
-// Route details, photos and weather read the same itinerary as the map.
-// This module never wraps fetch, modifies geolocation, or reads visitor coordinates.
+// Editorial details, galleries and weather share the map's canonical itinerary.
+// Geolocation remains in nyc-app.js; this module never reads visitor coordinates.
 const DATA_URL = 'data/nyc-itinerary.json';
 const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=40.758&longitude=-73.9855&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=America%2FNew_York&past_days=2&forecast_days=16';
 const REFRESH_MS = 30 * 60 * 1000;
@@ -84,20 +84,29 @@ function directionsUrl(day, leg, mode = leg.mode) {
   return `https://www.google.com/maps/dir/?${new URLSearchParams({api:'1',origin:a.mapsQuery,destination:b.mapsQuery,travelmode:mode})}`;
 }
 
+function alternativeHtml(item) {
+  const steps = Array.isArray(item.stops) ? item.stops : [];
+  const nested = steps.length ? `<details><summary>Programma alternativo e luoghi salvati</summary>
+    <p>Queste tappe sostituiscono la giornata principale e non compaiono fra i suoi marker.</p>
+    ${steps.map(stop => `<article class="pause-card"><small>${escapeHtml(stop.time)}</small><strong>${escapeHtml(stop.name)}</strong><p>${escapeHtml(stop.description)}</p><div class="stop-actions"><a href="${escapeHtml(mapsLink(stop.mapsQuery))}" target="_blank" rel="noreferrer">Google Maps ↗</a>${stop.sourceUrl ? `<a href="${escapeHtml(safeUrl(stop.sourceUrl))}" target="_blank" rel="noreferrer">Informazioni ufficiali ↗</a>` : ''}</div></article>`).join('')}</details>` : '';
+  return `<article class="pause-card"><small>${escapeHtml(item.kind)}</small><strong>${escapeHtml(item.name)}</strong><p>${escapeHtml(item.description)}</p><div class="stop-actions"><a href="${escapeHtml(mapsLink(item.mapsQuery))}" target="_blank" rel="noreferrer">Google Maps ↗</a>${item.sourceUrl ? `<a href="${escapeHtml(safeUrl(item.sourceUrl))}" target="_blank" rel="noreferrer">Sito ufficiale ↗</a>` : ''}${item.routeUrl ? `<a href="${escapeHtml(safeUrl(item.routeUrl))}" target="_blank" rel="noreferrer">Percorso alternativo ↗</a>` : ''}</div>${nested}</article>`;
+}
+
 function renderPlanDetails(day) {
   const timeline = document.querySelector('.timeline-section');
   if (!timeline || document.querySelector('[data-plan-details]')) return;
   const section = document.createElement('section');
   section.className = 'detail-section';
   section.dataset.planDetails = day.date;
-  section.innerHTML = `<details><summary><strong>Spostamenti, senza sorprese</strong></summary>
+  section.innerHTML = `<details><summary><strong>Spostamenti e informazioni pratiche</strong></summary>
     <p>Tempi indicativi, non dati di traffico in tempo reale. La linea sulla mappa collega le tappe: non è un percorso stradale.</p>
+    ${day.routeNote ? `<p>${escapeHtml(day.routeNote)}</p>` : ''}
     ${(day.legs || []).map(leg => `<article class="pause-card"><strong>${escapeHtml(day.stops[leg.fromStop].name)} → ${escapeHtml(day.stops[leg.toStop].name)}</strong>
-    <p>${escapeHtml(leg.estimate)}</p><div class="stop-actions"><a href="${escapeHtml(directionsUrl(day,leg))}" target="_blank" rel="noreferrer">${leg.mode === 'walking' ? 'A piedi' : 'Con i mezzi'} · Google Maps ↗</a>
+    <p>${escapeHtml(leg.estimate)}</p><div class="stop-actions"><a href="${escapeHtml(directionsUrl(day,leg))}" target="_blank" rel="noreferrer">${leg.mode === 'walking' ? 'A piedi' : leg.mode === 'driving' ? 'In auto' : 'Con i mezzi'} · Google Maps ↗</a>
     ${leg.walkingAlternative ? `<a href="${escapeHtml(directionsUrl(day,leg,'walking'))}" target="_blank" rel="noreferrer">Alternativa a piedi ↗</a>` : ''}
     ${leg.sourceUrl ? `<a href="${escapeHtml(safeUrl(leg.sourceUrl))}" target="_blank" rel="noreferrer">Orari ufficiali ↗</a>` : ''}</div></article>`).join('')}
-    ${day.sources?.length ? `<p>Controlla gli avvisi e i biglietti sui siti ufficiali:</p><div class="stop-actions">${day.sources.map(url => `<a href="${escapeHtml(safeUrl(url))}" target="_blank" rel="noreferrer">${escapeHtml(new URL(url).hostname.replace(/^www\./,''))} ↗</a>`).join('')}</div>` : ''}</details>
-    ${day.alternatives?.length ? `<h2>Alternative, non tappe extra</h2><p>Non sono incluse nella numerazione né nel percorso principale.</p>${day.alternatives.map(item => `<article class="pause-card"><small>${escapeHtml(item.kind)}</small><strong>${escapeHtml(item.name)}</strong><p>${escapeHtml(item.description)}</p><div class="stop-actions"><a href="${escapeHtml(mapsLink(item.mapsQuery))}" target="_blank" rel="noreferrer">Google Maps ↗</a>${item.sourceUrl ? `<a href="${escapeHtml(safeUrl(item.sourceUrl))}" target="_blank" rel="noreferrer">Sito ufficiale ↗</a>` : ''}</div></article>`).join('')}` : ''}`;
+    ${day.sources?.length ? `<p>Orari, avvisi e biglietti sui siti ufficiali:</p><div class="stop-actions">${day.sources.map(url => `<a href="${escapeHtml(safeUrl(url))}" target="_blank" rel="noreferrer">${escapeHtml(new URL(url).hostname.replace(/^www\./,''))} ↗</a>`).join('')}</div>` : ''}</details>
+    ${day.alternatives?.length ? `<h2>Alternative, non tappe extra</h2><p>Non sono incluse nella numerazione né nel percorso principale.</p>${day.alternatives.map(alternativeHtml).join('')}` : ''}`;
   timeline.insertAdjacentElement('afterend', section);
 }
 
@@ -134,7 +143,14 @@ function renderSmallWeather() {
     }
   }
   const note = document.querySelector('.weather-footnote');
-  if (note) note.textContent = 'Meteo: aggiornamento all’apertura e ogni 30 minuti mentre la pagina è attiva. Le previsioni salvate sono datate separatamente.';
+  if (note) note.textContent = 'Meteo: aggiornamento all’apertura e ogni 30 minuti mentre la pagina è attiva. Se non riesce, resta il dato con la sua data originale.';
+}
+
+function syncEditorialLabels(day) {
+  const label = document.getElementById('todayLabel');
+  if (label) label.textContent = document.body.dataset.tab === 'days' ? 'Tutti i giorni' : `${day.weekday} ${new Intl.DateTimeFormat('it-IT',{day:'numeric',month:'long',timeZone:'UTC'}).format(new Date(`${day.date}T12:00:00Z`))}`;
+  const restaurants = document.querySelector('.restaurant-list');
+  if (restaurants && !day.restaurants?.length) restaurants.closest('.detail-section').hidden = true;
 }
 
 const observer = new MutationObserver(scheduleEnhance);
@@ -147,11 +163,10 @@ function observeContent() {
 function enhance() {
   scheduled = false;
   if (!itinerary) return;
-  // Prevent our own DOM changes from scheduling another render indefinitely.
   observer.disconnect();
   try {
     const day = dayFor(activeDate());
-    if (day) { renderGallery(day); renderWeather(day); renderPlanDetails(day); }
+    if (day) { renderGallery(day); renderWeather(day); renderPlanDetails(day); syncEditorialLabels(day); }
     renderSmallWeather();
   } finally { observeContent(); }
 }
@@ -193,7 +208,6 @@ async function init() {
     scheduleEnhance();
     refreshWeather(true);
   } catch {
-    // The base itinerary and GPS remain independent of these enhancements.
     observer.disconnect();
   }
 }
