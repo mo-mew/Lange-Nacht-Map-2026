@@ -1,3 +1,5 @@
+import { routeShops, shopBadge, shoppingHtml } from './nyc-shopping.js';
+
 const DATA_URL = 'data/nyc-itinerary.json';
 const NYC_CENTER = [40.7580, -73.9855];
 const MOBILE_QUERY = '(max-width: 760px)';
@@ -24,6 +26,8 @@ const els = {
 
 const state = {
   data: null,
+  showShoppingPins: true,
+  shoppingRoute: null,
   selectedDate: null,
   tab: 'today',
   map: null,
@@ -151,6 +155,7 @@ function dayDetailHtml(day) {
   const isToday = day.date === nycTodayISO();
   return `
     <div class="day-detail">
+      <button type="button" class="shopping-shortcut" data-open-shopping><strong>Shopping, quando vuoi</strong><span>${day.date === state.data.shopping?.date ? '9 negozi tra SoHo e Lower East Side' : '13 negozi salvati · 2 percorsi'} <b>›</b></span></button>
       <header class="day-hero">
         <p>${escapeHtml(day.weekday)} ${escapeHtml(dayNumberLabel(day))}${isToday ? ' · OGGI' : ''}</p>
         <h1>${escapeHtml(day.title)}</h1>
@@ -201,6 +206,18 @@ function allDaysHtml() {
 
 function renderContent() {
   if (!state.data) return;
+  if (state.tab === 'shopping') {
+    els.content.innerHTML = shoppingHtml(state.data.shopping, state.shoppingRoute, state.showShoppingPins);
+    els.content.querySelector('[data-shopping-pins]')?.addEventListener('change', event => setShoppingPins(event.target.checked));
+    els.content.querySelectorAll('[data-shopping-route]').forEach(button => button.addEventListener('click', () => {
+      setShoppingRoute(state.shoppingRoute === button.dataset.shoppingRoute ? null : button.dataset.shoppingRoute);
+    }));
+    els.content.querySelectorAll('[data-shop-focus]').forEach(button => button.addEventListener('click', () => {
+      if (!state.showShoppingPins) setShoppingPins(true);
+      focusStop(`shop:${button.dataset.shopFocus}`);
+    }));
+    return;
+  }
   if (state.tab === 'days') {
     els.content.innerHTML = allDaysHtml();
     els.content.querySelectorAll('[data-open-day]').forEach(button => {
@@ -215,6 +232,7 @@ function renderContent() {
   }
 
   els.content.innerHTML = dayDetailHtml(currentDay());
+  els.content.querySelector('[data-open-shopping]')?.addEventListener('click', () => setTab('shopping'));
   els.content.querySelectorAll('[data-show-on-map]').forEach(button => {
     button.addEventListener('click', () => focusStop(button.dataset.showOnMap));
   });
@@ -278,23 +296,24 @@ function renderMapDay({ fit = false } = {}) {
   });
 
   if (points.length > 1) {
-    L.polyline(points, { weight: 3, opacity: 0.55, dashArray: '8 8' }).addTo(state.routeLayer);
+    L.polyline(points, { color: '#5f7600', weight: 3, opacity: 0.55, dashArray: '8 8' }).addTo(state.routeLayer);
   }
 
-  if (fit && points.length) fitDayAndUser(points);
+  renderShoppingMap();
+  if (fit && points.length) fitDayAndUser();
 }
 
 function fitDayAndUser(dayPoints = null) {
   if (!state.map) return;
   const day = currentDay();
-  const points = dayPoints || day.stops.filter(stop => Number.isFinite(stop.lat) && Number.isFinite(stop.lng)).map(stop => [stop.lat, stop.lng]);
+  const points = dayPoints || (state.shoppingRoute ? routeShops(state.data.shopping,state.shoppingRoute) : day.stops).filter(stop => Number.isFinite(stop.lat) && Number.isFinite(stop.lng)).map(stop => [stop.lat, stop.lng]);
   const boundsPoints = [...points];
   if (state.userLocation && distanceKm(state.userLocation, { lat: NYC_CENTER[0], lng: NYC_CENTER[1] }) < 80) {
     boundsPoints.push([state.userLocation.lat, state.userLocation.lng]);
   }
   if (!boundsPoints.length) return;
   if (boundsPoints.length === 1) state.map.setView(boundsPoints[0], 15);
-  else state.map.fitBounds(boundsPoints, { padding: [42, 42], maxZoom: 14 });
+  else state.map.fitBounds(boundsPoints, { padding: [42, 42], maxZoom: state.shoppingRoute ? 16 : 14 });
 }
 
 function mapCardHtml(stop, index) {
@@ -313,12 +332,12 @@ function mapCardHtml(stop, index) {
 function selectStopOnMap(key, stop, index) {
   if (state.selectedMarker) {
     const previous = state.markerByKey.get(state.selectedMarker);
-    previous?.marker.setIcon(markerIcon(previous.index));
+    if (previous) previous.marker.setIcon(iconForEntry(previous));
   }
   state.selectedMarker = key;
   const current = state.markerByKey.get(key);
-  current?.marker.setIcon(selectedMarkerIcon(index));
-  els.mapCard.innerHTML = mapCardHtml(stop, index);
+  if (current) current.marker.setIcon(iconForEntry(current, true));
+  els.mapCard.innerHTML = current?.shop ? shoppingMapCard(current) : mapCardHtml(stop, index);
   els.mapCard.hidden = false;
   els.mapCard.querySelector('[data-close-map]')?.addEventListener('click', closeMapCard);
 }
@@ -326,7 +345,7 @@ function selectStopOnMap(key, stop, index) {
 function closeMapCard() {
   if (state.selectedMarker) {
     const previous = state.markerByKey.get(state.selectedMarker);
-    previous?.marker.setIcon(markerIcon(previous.index));
+    if (previous) previous.marker.setIcon(iconForEntry(previous));
   }
   state.selectedMarker = null;
   els.mapCard.hidden = true;
@@ -341,6 +360,56 @@ function focusStop(key) {
     state.map.setView(target.marker.getLatLng(), 16, { animate: !reducedMotion.matches });
     selectStopOnMap(key, target.stop, target.index);
   });
+}
+
+function iconForEntry(entry, selected = false) {
+  if (!entry.shop) return selected ? selectedMarkerIcon(entry.index) : markerIcon(entry.index);
+  return L.divIcon({className:'', html:`<div class="shopping-marker ${entry.stop.secondHand ? 'is-secondhand' : 'is-new'}${selected ? ' is-selected' : ''}">${entry.label}</div>`, iconSize:[40,40], iconAnchor:[20,20]});
+}
+
+function renderShoppingMap() {
+  const shopping = state.data.shopping;
+  if (!shopping) return;
+  if (state.showShoppingPins) shopping.routes.forEach(route => {
+    routeShops(shopping,route.id).forEach((shop,index) => {
+      const key = `shop:${shop.id}`;
+      const entry = {shop:true,stop:shop,index,label:`${route.prefix}${index+1}`};
+      const marker = L.marker([shop.lat,shop.lng], {icon:iconForEntry(entry),title:`${entry.label} · ${shop.name} · ${shop.type}`,zIndexOffset:100});
+      entry.marker = marker;
+      marker.on('click', event => { L.DomEvent.stopPropagation(event); selectStopOnMap(key,shop,index); });
+      marker.addTo(state.markerLayer);
+      state.markerByKey.set(key,entry);
+    });
+  });
+  if (state.shoppingRoute) {
+    const points = routeShops(shopping,state.shoppingRoute).map(shop=>[shop.lat,shop.lng]);
+    L.polyline(points,{color:'#8050b9',weight:4,opacity:0.8,dashArray:'4 9',interactive:false}).addTo(state.routeLayer);
+  }
+  $('#shoppingMapMode').value = !state.showShoppingPins ? 'hidden' : state.shoppingRoute || 'pins';
+  els.fitButton.textContent = state.shoppingRoute ? 'Vedi shopping' : 'Vedi giornata';
+  $('#shoppingMapNote').textContent = state.shoppingRoute ? 'Percorso shopping parallelo · linea indicativa' : 'Soste shopping opzionali';
+}
+
+function setShoppingPins(show) {
+  state.showShoppingPins = show;
+  if (!show) state.shoppingRoute = null;
+  renderMapDay();
+  if (state.tab === 'shopping') renderContent();
+}
+
+function setShoppingRoute(routeId) {
+  state.shoppingRoute = routeId;
+  state.showShoppingPins = true;
+  renderMapDay({fit:true});
+  if (state.tab === 'shopping') renderContent();
+  if (mobileMedia.matches && routeId && state.map) setTab('map');
+}
+
+function shoppingMapCard(entry) {
+  const shop = entry.stop;
+  return `<div class="map-card-head"><div><small>Shopping ${entry.label} · sosta opzionale</small><h2>${escapeHtml(shop.name)}</h2></div><button type="button" data-close-map aria-label="Chiudi">×</button></div>
+    ${shopBadge(shop)}<p>${escapeHtml(shop.address)}</p>
+    <div class="map-card-actions"><a href="${mapsLink(shop.mapsQuery)}" target="_blank" rel="noreferrer">Negozio e orari su Google Maps ↗</a></div>`;
 }
 
 function userIcon() {
@@ -486,6 +555,7 @@ function centerOnUser() {
 function setTab(tab) {
   state.tab = tab;
   document.body.dataset.tab = tab;
+  els.todayLabel.textContent = tab === 'shopping' ? 'Shopping' : tab === 'days' ? 'Tutti i giorni' : `${currentDay()?.weekday || ''} ${currentDay() ? dayNumberLabel(currentDay()) : ''}`;
   els.tabButtons.forEach(button => {
     const active = button.dataset.tabTarget === tab;
     button.classList.toggle('is-active', active);
@@ -503,6 +573,12 @@ function bindStaticActions() {
     if (mobileMedia.matches) setTab('map');
   });
   els.locateButton.addEventListener('click', centerOnUser);
+  $('#shoppingMapMode').addEventListener('change', event => {
+    const value = event.target.value;
+    if (value === 'hidden') setShoppingPins(false);
+    else if (value === 'pins') { state.showShoppingPins = true; setShoppingRoute(null); }
+    else setShoppingRoute(value);
+  });
   els.fitButton.addEventListener('click', () => fitDayAndUser());
   mobileMedia.addEventListener?.('change', () => requestAnimationFrame(() => state.map?.invalidateSize()));
 }

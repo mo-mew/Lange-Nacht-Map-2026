@@ -190,5 +190,247 @@
       "routeUrl": "https://www.google.com/maps/dir/?api=1&origin=American+Museum+of+Natural+History+200+Central+Park+West+New+York&destination=Solomon+R.+Guggenheim+Museum+1071+Fifth+Avenue+New+York",
       "routeNote": "Collegamento fra i musei. Per il pranzo usa la scheda del locale scelto; l’itinerario esatto dipende dal meteo e dal mezzo."
     }
-  ]
+  ],
+  "shopping": {
+    "date": "2026-09-11",
+    "shops": [
+      {
+        "id": "with-jean",
+        "name": "With Jéan",
+        "address": "43 Wooster St, New York, NY 10012",
+        "mapsQuery": "With Jéan, 43 Wooster St, New York, NY 10012",
+        "secondHand": false,
+        "type": "Nuovo",
+        "lat": 40.722526091427,
+        "lng": -74.002608852134,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=43+Wooster+St%2C+New+York%2C+NY+10012&benchmark=Public_AR_Current&format=json"
+      },
+      {
+        "id": "realreal",
+        "name": "The RealReal",
+        "address": "80 Wooster St, New York, NY 10012",
+        "mapsQuery": "The RealReal, 80 Wooster St, New York, NY 10012",
+        "secondHand": true,
+        "type": "Second hand · Luxury consignment",
+        "lat": 40.723629629693,
+        "lng": -74.001489483347,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=80+Wooster+St%2C+New+York%2C+NY+10012&benchmark=Public_AR_Current&format=json"
+      },
+      {
+        "id": "rebelonging",
+        "name": "Rebelonging",
+        "address": "422 W Broadway, New York, NY 10012",
+        "mapsQuery": "Rebelonging, 422 W Broadway, New York, NY 10012",
+        "secondHand": true,
+        "type": "Second hand · Vintage",
+        "lat": 40.725068375178,
+        "lng": -74.00158364127,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=422+W+Broadway%2C+New+York%2C+NY+10012&benchmark=Public_AR_Current&format=json"
+      },
+      {
+        "id": "tibi",
+        "name": "Tibi",
+        "address": "120 Wooster St, New York, NY 10012",
+        "mapsQuery": "Tibi, 120 Wooster St, New York, NY 10012",
+        "secondHand": false,
+        "type": "Nuovo",
+        "lat": 40.725001335488,
+        "lng": -74.000328991839,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=120+Wooster+St%2C+New+York%2C+NY+10012&benchmark=Public_AR_Current&format=json"
+      },
+      {
+        "id": "reformation",
+        "name": "Reformation",
+        "address": "62 Greene St, New York, NY 10012",
+        "mapsQuery": "Reformation, 62 Greene St, New York, NY 10012",
+        "secondHand": false,
+        "type": "Nuovo",
+        "lat": 40.722822460176,
+        "lng": -74.001089224517,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=62+Greene+St%2C+New+York%2C+NY+10012&benchmark=Public_AR_Current&format=json"
+      },
+      {
+        "id": "rag-bone",
+        "name": "rag & bone",
+        "address": "119 Mercer St, New York, NY 10012",
+        "mapsQuery": "rag & bone, 119 Mercer St, New York, NY 10012",
+        "secondHand": false,
+        "type": "Nuovo",
+        "lat": 40.724030586503,
+        "lng": -73.999184936244,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=119+Mercer+St%2C+New+York%2C+NY+10012&benchmark=Public_AR_Current&format=json"
+      },
+      {
+        "id": "retrofete",
+        "name": "Retrofête (seroya)",
+        "address": "99 Spring St, New York, NY 10012",
+        "mapsQuery": "Retrofête (seroya), 99 Spring St, New York, NY 10012",
+        "secondHand": false,
+        "type": "Nuovo",
+        "lat": 40.723373167348,
+        "lng": -73.999370464213,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=99+Spring+St%2C+New+York%2C+NY+10012&benchmark=Public_AR_Current&format=json"
+      },
+      {
+        "id": "frankie",
+        "name": "The Frankie Shop",
+        "address": "59 Crosby St, New York, NY 10012",
+        "mapsQuery": "The Frankie Shop, 59 Crosby St, New York, NY 10012",
+        "secondHand": false,
+        "type": "Nuovo",
+        "lat": 40.722080869296,
+        "lng": -73.998381745971,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=59+Crosby+St%2C+New+York%2C+NY+10012&benchmark=Public_AR_Current&format=json"
+      },
+      {
+        "id": "sun-prophet",
+        "name": "Sun Prophet Vintage",
+        "address": "151 Allen St, New York, NY 10002",
+        "mapsQuery": "Sun Prophet Vintage, 151 Allen St, New York, NY 10002",
+        "secondHand": true,
+        "type": "Second hand · Vintage",
+        "lat": 40.720666287737,
+        "lng": -73.989868581846,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=151+Allen+St%2C+New+York%2C+NY+10002&benchmark=Public_AR_Current&format=json"
+      },
+      {
+        "id": "ina",
+        "name": "INA",
+        "address": "207 W 18th St, New York, NY 10011",
+        "mapsQuery": "INA, 207 W 18th St, New York, NY 10011",
+        "secondHand": true,
+        "type": "Second hand · Consignment",
+        "lat": 40.741203205659,
+        "lng": -73.998060363878,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=207+W+18th+St%2C+New+York%2C+NY+10011&benchmark=Public_AR_Current&format=json"
+      },
+      {
+        "id": "coach",
+        "name": "COACH",
+        "address": "685 5th Ave, New York, NY 10022",
+        "mapsQuery": "COACH, 685 5th Ave, New York, NY 10022",
+        "secondHand": false,
+        "type": "Nuovo · Accessori",
+        "lat": 40.760884319529,
+        "lng": -73.975398520738,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=685+5th+Ave%2C+New+York%2C+NY+10022&benchmark=Public_AR_Current&format=json"
+      },
+      {
+        "id": "second-street",
+        "name": "2nd STREET Upper East Side",
+        "address": "1282 3rd Ave, New York, NY 10021",
+        "mapsQuery": "2nd STREET Upper East Side, 1282 3rd Ave, New York, NY 10021",
+        "secondHand": true,
+        "type": "Second hand",
+        "lat": 40.770863934353,
+        "lng": -73.959877925661,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=1282+3rd+Ave%2C+New+York%2C+NY+10021&benchmark=Public_AR_Current&format=json"
+      },
+      {
+        "id": "only-hearts",
+        "name": "Only Hearts",
+        "address": "386 Columbus Ave, New York, NY 10024",
+        "mapsQuery": "Only Hearts, 386 Columbus Ave, New York, NY 10024",
+        "secondHand": false,
+        "type": "Nuovo · Lingerie",
+        "lat": 40.781652542219,
+        "lng": -73.975784902287,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=386+Columbus+Ave%2C+New+York%2C+NY+10024&benchmark=Public_AR_Current&format=json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "downtown",
+        "prefix": "A",
+        "title": "SoHo + Lower East Side",
+        "summary": "9 negozi · a piedi",
+        "description": "Il giro più comodo per oggi: 8 indirizzi a SoHo, poi Sun Prophet su Allen Street. Puoi spezzarlo durante le visite e riprenderlo vicino al Tenement Museum.",
+        "connection": "Inserisci le tappe di SoHo durante la passeggiata nel quartiere; tieni Sun Prophet per la parte Lower East Side.",
+        "stopIds": [
+          "rebelonging",
+          "tibi",
+          "realreal",
+          "with-jean",
+          "reformation",
+          "rag-bone",
+          "retrofete",
+          "frankie",
+          "sun-prophet"
+        ],
+        "legs": [
+          {
+            "to": "tibi",
+            "mode": "walking",
+            "from": "rebelonging"
+          },
+          {
+            "to": "realreal",
+            "mode": "walking",
+            "from": "tibi"
+          },
+          {
+            "to": "with-jean",
+            "mode": "walking",
+            "from": "realreal"
+          },
+          {
+            "to": "reformation",
+            "mode": "walking",
+            "from": "with-jean"
+          },
+          {
+            "to": "rag-bone",
+            "mode": "walking",
+            "from": "reformation"
+          },
+          {
+            "to": "retrofete",
+            "mode": "walking",
+            "from": "rag-bone"
+          },
+          {
+            "to": "frankie",
+            "mode": "walking",
+            "from": "retrofete"
+          },
+          {
+            "to": "sun-prophet",
+            "mode": "walking",
+            "from": "frankie"
+          }
+        ]
+      },
+      {
+        "id": "uptown",
+        "prefix": "B",
+        "title": "Chelsea + Uptown",
+        "summary": "4 negozi · a piedi e con i mezzi",
+        "description": "Da INA a Chelsea verso COACH sulla Fifth Avenue, poi 2nd STREET nell’Upper East Side e Only Hearts nell’Upper West Side. Per farli tutti, dedica un’uscita separata.",
+        "connection": "INA è la deviazione più vicina al West Village. COACH si abbina al MoMA; Only Hearts al museo di Storia Naturale. Non sono tutte soste vicine al percorso di oggi.",
+        "stopIds": [
+          "ina",
+          "coach",
+          "second-street",
+          "only-hearts"
+        ],
+        "legs": [
+          {
+            "from": "ina",
+            "to": "coach",
+            "mode": "transit"
+          },
+          {
+            "from": "coach",
+            "to": "second-street",
+            "mode": "walking"
+          },
+          {
+            "from": "second-street",
+            "to": "only-hearts",
+            "mode": "transit"
+          }
+        ]
+      }
+    ]
+  }
 }

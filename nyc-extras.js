@@ -148,7 +148,7 @@ function renderSmallWeather() {
 
 function syncEditorialLabels(day) {
   const label = document.getElementById('todayLabel');
-  if (label) label.textContent = document.body.dataset.tab === 'days' ? 'Tutti i giorni' : `${day.weekday} ${new Intl.DateTimeFormat('it-IT',{day:'numeric',month:'long',timeZone:'UTC'}).format(new Date(`${day.date}T12:00:00Z`))}`;
+  if (label) label.textContent = document.body.dataset.tab === 'shopping' ? 'Shopping' : document.body.dataset.tab === 'days' ? 'Tutti i giorni' : `${day.weekday} ${new Intl.DateTimeFormat('it-IT',{day:'numeric',month:'long',timeZone:'UTC'}).format(new Date(`${day.date}T12:00:00Z`))}`;
   const restaurants = document.querySelector('.restaurant-list');
   if (restaurants && !day.restaurants?.length) restaurants.closest('.detail-section').hidden = true;
 }

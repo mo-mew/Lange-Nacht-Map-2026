@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="nyc-styles.css" />
   <link rel="stylesheet" href="nyc-extras.css?v=20260909-geography" />
+  <link rel="stylesheet" href="nyc-shopping.css?v=20260911" />
 </head>
 <body data-tab="today">
   <div class="app-shell">
@@ -36,6 +37,7 @@
       <section class="map-pane" aria-label="Mappa del viaggio">
         <div id="map"></div>
         <div class="map-controls">
+          <div class="shopping-map-control"><label for="shoppingMapMode">Shopping</label><select id="shoppingMapMode" aria-describedby="shoppingMapNote"><option value="pins">Solo pin opzionali</option><option value="downtown">A · SoHo + Lower East Side</option><option value="uptown">B · Chelsea + Uptown</option><option value="hidden">Nascondi shopping</option></select><small id="shoppingMapNote">Soste shopping opzionali</small><div class="shopping-legend"><span class="legend-day">● Visite</span><span class="legend-new">■ Nuovo</span><span class="legend-secondhand">■ Second hand</span></div></div>
           <button id="locateButton" type="button">La mia posizione</button>
           <button id="fitButton" type="button">Vedi giornata</button>
           <div id="mapStatus" class="map-status" aria-live="polite">Posizione non ancora attiva.</div>
@@ -46,6 +48,7 @@
     <nav class="tabbar" aria-label="Navigazione principale">
       <button type="button" data-tab-target="today" class="is-active" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 2v4M16 2v4M8 10h8M8 14h5"/></svg><span>Oggi</span></button>
       <button type="button" data-tab-target="days"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Giorni</span></button>
+      <button type="button" data-tab-target="shopping"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 7h14l1 14H4L5 7ZM9 8V6a3 3 0 0 1 6 0v2"/></svg><span>Shopping</span></button>
       <button type="button" data-tab-target="map"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m4 6 5-2 6 2 5-2v14l-5 2-6-2-5 2V6ZM9 4v14M15 6v14"/></svg><span>Mappa</span></button>
     </nav>
   </div>
