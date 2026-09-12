@@ -20,11 +20,15 @@
       "headers": [{"key": "Cache-Control", "value": "no-store, max-age=0"}]
     },
     {
-      "source": "/nyc-plan-update.js",
+      "source": "/nyc-extras.js",
       "headers": [{"key": "Cache-Control", "value": "no-store, max-age=0"}]
     },
     {
-      "source": "/nyc-extras.js",
+      "source": "/nyc-shopping.js",
+      "headers": [{"key": "Cache-Control", "value": "no-store, max-age=0"}]
+    },
+    {
+      "source": "/nyc-shopping.css",
       "headers": [{"key": "Cache-Control", "value": "no-store, max-age=0"}]
     },
     {
