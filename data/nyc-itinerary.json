@@ -336,6 +336,110 @@
         "lat": 40.781652542219,
         "lng": -73.975784902287,
         "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=386+Columbus+Ave%2C+New+York%2C+NY+10024&benchmark=Public_AR_Current&format=json"
+      },
+      {
+        "id": "tecovas",
+        "name": "Tecovas · SoHo",
+        "address": "105 Wooster St, New York, NY 10012",
+        "mapsQuery": "Tecovas · SoHo, 105 Wooster St, New York, NY 10012",
+        "secondHand": false,
+        "type": "Nuovo · Western specialist",
+        "lat": 40.724615712055,
+        "lng": -74.0008341468,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=105+Wooster+St%2C+New+York%2C+NY+10012&benchmark=Public_AR_Current&format=json",
+        "budget": "Circa $300–600",
+        "note": "Prova il 10D e confronta Garrett/Nolan e le forme disponibili: cerca nero, pointed o snip. Valuta il tacco, che può essere più basso di quello che desideri.",
+        "sourceUrl": "https://www.tecovas.com/stores/soho-new-york"
+      },
+      {
+        "id": "double-rl",
+        "name": "Double RL · SoHo",
+        "address": "381 W Broadway, New York, NY 10012",
+        "mapsQuery": "Double RL · SoHo, 381 W Broadway, New York, NY 10012",
+        "secondHand": false,
+        "type": "Nuovo · Western / Americana",
+        "lat": 40.723748142584,
+        "lng": -74.002519357679,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=381+W+Broadway%2C+New+York%2C+NY+10012&benchmark=Public_AR_Current&format=json",
+        "budget": "Circa $800–1.400",
+        "note": "Sosta fashion/Americana mentre sei a SoHo. Chiedi western boots uomo neri in taglia 10; confronta costruzione e prezzo con Tecovas e Lucchese.",
+        "sourceUrl": "https://www.ralphlauren.com/"
+      },
+      {
+        "id": "kemo-sabe",
+        "name": "Kemo Sabe · Refinery Hotel",
+        "address": "63 W 38th St, New York, NY 10018",
+        "mapsQuery": "Kemo Sabe · Refinery Hotel, 63 W 38th St, New York, NY 10018",
+        "secondHand": false,
+        "type": "Nuovo · Pop-up western",
+        "lat": 40.751859175956,
+        "lng": -73.98470964015,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=63+W+38th+St%2C+New+York%2C+NY+10018&benchmark=Public_AR_Current&format=json",
+        "budget": "Circa $950–1.900",
+        "note": "Priorità per silhouette e qualità: chiedi Stallion/Zorro, nero, snip toe e 10D. Modelli e taglie del catalogo non garantiscono lo stock del pop-up.",
+        "sourceUrl": "https://www.refineryhotelnewyork.com/",
+        "popUp": {
+          "from": "2026-09-10",
+          "through": "2026-09-27"
+        },
+        "appointment": "Pop-up 10–27 settembre 2026 · verifica orari e stock prima della visita"
+      },
+      {
+        "id": "bergdorf-men",
+        "name": "Bergdorf Goodman · Men’s Store",
+        "address": "745 5th Ave, New York, NY 10151",
+        "mapsQuery": "Bergdorf Goodman · Men’s Store, 745 5th Ave, New York, NY 10151",
+        "secondHand": false,
+        "type": "Nuovo · Lucchese",
+        "lat": 40.763069934781,
+        "lng": -73.973804229702,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=745+5th+Ave%2C+New+York%2C+NY+10151&benchmark=Public_AR_Current&format=json",
+        "budget": "Da circa $895",
+        "note": "Per provare Lucchese e capire il fit. La selezione uomo può essere ristretta: chiedi in anticipo nero, snip/pointed e 10D, senza dare per disponibile il Bart Black.",
+        "sourceUrl": "https://stores.bergdorfgoodman.com/stores/home"
+      },
+      {
+        "id": "azteca",
+        "name": "Azteca Western Wear",
+        "address": "222 E 116th St, New York, NY 10029",
+        "mapsQuery": "Azteca Western Wear, 222 E 116th St, New York, NY 10029",
+        "secondHand": false,
+        "type": "Nuovo · Western / Vaquero",
+        "lat": 40.797477253795,
+        "lng": -73.939066106323,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=222+E+116th+St%2C+New+York%2C+NY+10029&benchmark=Public_AR_Current&format=json",
+        "budget": "Circa $150–500",
+        "note": "Priorità per punte affilate e stile vaquero: chiedi nero snip-toe, anche ostrich leg. Esamina il singolo paio: produttore, cuciture, suola e altezza del tacco.",
+        "sourceUrl": "https://aztecawestern.com/"
+      },
+      {
+        "id": "arial-7",
+        "name": "Arial 7 Boots",
+        "address": "244 5th Ave, New York, NY 10001",
+        "mapsQuery": "Arial 7 Boots, 244 5th Ave, New York, NY 10001",
+        "secondHand": false,
+        "type": "Nuovo · Su misura",
+        "lat": 40.74458672151,
+        "lng": -73.987454128631,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=244+5th+Ave%2C+New+York%2C+NY+10001&benchmark=Public_AR_Current&format=json",
+        "budget": "Preventivo su richiesta",
+        "note": "Possibile custom: nero, vera punta snip/pointed, tacco 1¾–2”. Attività e servizio attuale non confermati: contatta prima e concorda indirizzo e appuntamento; non andare alla cieca.",
+        "sourceUrl": "https://www.superpages.com/new-york-ny/bpp/arial-7-boots-506670759",
+        "appointment": "Solo dopo conferma / appuntamento · presenza attuale da verificare"
+      },
+      {
+        "id": "wgaca",
+        "name": "What Goes Around Comes Around",
+        "address": "351 W Broadway, New York, NY 10013",
+        "mapsQuery": "What Goes Around Comes Around, 351 W Broadway, New York, NY 10013",
+        "secondHand": true,
+        "type": "Second hand · Luxury / Vintage",
+        "lat": 40.722814225256,
+        "lng": -74.003310236644,
+        "coordinateSource": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=351+W+Broadway%2C+New+York%2C+NY+10013&benchmark=Public_AR_Current&format=json",
+        "budget": "Variabile · resale",
+        "note": "Bonus solo se sei già in zona SoHo, dopo The RealReal come priorità. Non è un western specialist: disponibilità di boots uomo e taglie imprevedibile.",
+        "sourceUrl": "https://www.whatgoesaroundnyc.com/"
       }
     ],
     "routes": [
@@ -427,6 +531,56 @@
           {
             "from": "second-street",
             "to": "only-hearts",
+            "mode": "transit"
+          }
+        ]
+      },
+      {
+        "id": "cowboy",
+        "prefix": "D",
+        "title": "Cowboy boots · SoHo → East Harlem",
+        "summary": "6 tappe + 2 bonus · a piedi e con i mezzi",
+        "description": "Uomo, nero, punta pointed o snip; niente square o round toe. Prova il 10D e valuta un tacco 1¾–2”. Tecovas → Double RL → The RealReal a SoHo, poi Kemo Sabe al Refinery Hotel, Bergdorf uomo e Azteca a East Harlem.",
+        "connection": "Dai priorità ad Azteca e Kemo Sabe per la forma; Lucchese da Bergdorf per confrontare qualità e fit. È un giro dedicato attraverso Manhattan: puoi scegliere solo un blocco. Fasce prezzo dalla tua shortlist, indicative e non preventivi; disponibilità di modelli, nero e 10D da confermare.",
+        "stopIds": [
+          "tecovas",
+          "double-rl",
+          "realreal",
+          "kemo-sabe",
+          "bergdorf-men",
+          "azteca"
+        ],
+        "optionalStopIds": [
+          "wgaca",
+          "arial-7"
+        ],
+        "stopNotes": {
+          "realreal": "Bonus resale · 15 minuti se sei in zona. Cerca Lucchese, Old Gringo o western designer uomo: stock e taglie sono imprevedibili. È lo stesso negozio già salvato nel percorso A."
+        },
+        "legs": [
+          {
+            "from": "tecovas",
+            "to": "double-rl",
+            "mode": "walking"
+          },
+          {
+            "from": "double-rl",
+            "to": "realreal",
+            "mode": "walking"
+          },
+          {
+            "from": "realreal",
+            "to": "kemo-sabe",
+            "mode": "transit"
+          },
+          {
+            "from": "kemo-sabe",
+            "to": "bergdorf-men",
+            "mode": "walking"
+          },
+          {
+            "from": "bergdorf-men",
+            "to": "azteca",
             "mode": "transit"
           }
         ]

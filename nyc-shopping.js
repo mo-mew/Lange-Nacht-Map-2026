@@ -66,7 +66,8 @@ export function ensureTailoringRoute(shopping) {
     if (!shopping.shops.some(item => item.id === shop.id)) shopping.shops.push({...shop});
   }
   if (!shopping.routes.some(route => route.id === TAILORING_ROUTE.id)) {
-    shopping.routes.push({
+    const cowboyIndex = shopping.routes.findIndex(route => route.id === 'cowboy');
+    shopping.routes.splice(cowboyIndex < 0 ? shopping.routes.length : cowboyIndex, 0, {
       ...TAILORING_ROUTE,
       stopIds: [...TAILORING_ROUTE.stopIds],
       legs: TAILORING_ROUTE.legs.map(leg => ({...leg}))
@@ -78,10 +79,11 @@ export function ensureTailoringRoute(shopping) {
 function patchShoppingChrome(shopping) {
   if (typeof document === 'undefined') return;
   const select = document.querySelector('#shoppingMapMode');
-  if (select && !select.querySelector('option[value="tailoring"]')) {
+  for (const route of shopping?.routes || []) {
+    if (!select || select.querySelector(`option[value="${route.id}"]`)) continue;
     const option = document.createElement('option');
-    option.value = 'tailoring';
-    option.textContent = 'C · Sartoria uomo · Nolita + NoHo';
+    option.value = route.id;
+    option.textContent = `${route.prefix} · ${route.title}`;
     select.querySelector('option[value="hidden"]')?.before(option);
   }
   const total = shopping?.shops?.length || 16;
@@ -99,6 +101,36 @@ function observeShoppingChrome(shopping) {
   if (chromeObserver) return;
   chromeObserver = new MutationObserver(() => patchShoppingChrome(shopping));
   chromeObserver.observe(document.body, {childList:true, subtree:true});
+}
+
+export function prepareShopping(shopping) {
+  ensureTailoringRoute(shopping);
+  observeShoppingChrome(shopping);
+  return shopping;
+}
+
+export function routePinShops(shopping, routeId) {
+  const route = shopping?.routes.find(item => item.id === routeId);
+  return [...routeShops(shopping,routeId), ...(route?.optionalStopIds || []).map(id => shopping.shops.find(shop=>shop.id===id)).filter(Boolean)];
+}
+
+export function shopDetails(shop, routeNote = '', today = new Intl.DateTimeFormat('en-CA', {timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())) {
+  const expired = shop.popUp && today > shop.popUp.through;
+  return `${expired ? '<p class="shopping-note"><strong>Pop-up terminato il 27 settembre 2026 · non programmare la visita senza una nuova conferma.</strong></p>' : ''}
+    ${shop.appointment ? `<p class="shopping-note"><strong>${escapeHtml(shop.appointment)}</strong></p>` : ''}
+    ${shop.budget ? `<p class="shopping-note">Fascia indicativa: ${escapeHtml(shop.budget)}</p>` : ''}
+    ${routeNote || shop.note ? `<p class="shopping-note">${escapeHtml(routeNote || shop.note)}</p>` : ''}`;
+}
+
+function shoppingStopHtml(shopping, route, shop, label, optional = false) {
+  const leg = !optional && route.legs.find(l=>l.to===shop.id);
+  const previous = leg && shopping.shops.find(s=>s.id===leg.from);
+  return `<li><div class="shopping-stop-title"><span class="shopping-stop-number ${shop.secondHand ? 'is-secondhand' : 'is-new'}">${label}</span><h3>${escapeHtml(shop.name)}</h3></div>
+    ${optional ? '<p class="shopping-note"><strong>Bonus opzionale · fuori dal percorso tracciato</strong></p>' : ''}
+    ${shopBadge(shop)}<p class="shopping-address">${escapeHtml(shop.address)}</p>
+    ${shopDetails(shop,route.stopNotes?.[shop.id])}
+    <div class="shopping-actions"><button type="button" data-shop-focus="${shop.id}">Mappa</button><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shop.mapsQuery)}" target="_blank" rel="noreferrer">Google Maps ↗</a>${shop.sourceUrl ? `<a href="${escapeHtml(shop.sourceUrl)}" target="_blank" rel="noreferrer">${shop.id === 'arial-7' ? 'Contatto da verificare' : 'Sito / prenota'} ↗</a>` : ''}</div>
+    ${leg ? `<a class="shopping-leg" href="${escapeHtml(shoppingDirections([previous,shop],leg.mode))}" target="_blank" rel="noreferrer">${leg.mode==='transit' ? 'Con i mezzi' : 'A piedi'} da ${escapeHtml(previous.name)} ↗</a>` : ''}</li>`;
 }
 
 export function routeShops(shopping, routeId) {
@@ -132,7 +164,7 @@ export function shoppingHtml(shopping, selectedRoute, showPins) {
   const secondHandCount = shopping.shops.filter(shop => shop.secondHand).length;
   const tailoringCount = shopping.shops.filter(shop => shop.tailoring).length;
   return `<section class="shopping-panel" aria-label="Itinerari shopping e sartoria">
-    <header><p class="shopping-eyebrow">PERCORSI EXTRA</p><h1>Shopping e sartoria.</h1>
+    <header><p class="shopping-eyebrow">PERCORSI EXTRA</p><h1>Shopping, sartoria e boots.</h1>
     <p>${shopping.shops.length} posti · ${secondHandCount} second hand · ${tailoringCount} sartorie · ${shopping.routes.length} percorsi indipendenti dalle visite.</p></header>
     <label class="shopping-toggle"><input type="checkbox" data-shopping-pins ${showPins ? 'checked' : ''}> Mostra i posti sulla mappa</label>
     <div class="shopping-legend"><span class="legend-day">● Visite</span><span class="legend-new">■ Nuovo / sartoria</span><span class="legend-secondhand">■ Second hand</span></div>
@@ -148,19 +180,11 @@ export function shoppingHtml(shopping, selectedRoute, showPins) {
         <button type="button" class="shopping-route-button" data-shopping-route="${route.id}" aria-pressed="${active}">${active ? 'Percorso attivo · torna ai soli pin' : 'Mostra percorso parallelo'}</button>
         <p class="shopping-connection">${escapeHtml(route.connection)}</p>
         <details ${route.id === (selectedRoute || 'downtown') ? 'open' : ''}><summary>Le ${shops.length} tappe in ordine consigliato</summary>
-          <ol class="shopping-list">${shops.map((shop,index) => {
-            const leg = route.legs.find(l=>l.to===shop.id);
-            const previous = leg && shopping.shops.find(s=>s.id===leg.from);
-            return `<li><div class="shopping-stop-title"><span class="shopping-stop-number ${shop.secondHand ? 'is-secondhand' : 'is-new'}">${route.prefix}${index+1}</span><h3>${escapeHtml(shop.name)}</h3></div>
-              ${shopBadge(shop)}<p class="shopping-address">${escapeHtml(shop.address)}</p>
-              ${shop.appointment ? `<p class="shopping-note"><strong>${escapeHtml(shop.appointment)}</strong></p>` : ''}
-              ${shop.note ? `<p class="shopping-note">${escapeHtml(shop.note)}</p>` : ''}
-              <div class="shopping-actions"><button type="button" data-shop-focus="${shop.id}">Mappa</button><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shop.mapsQuery)}" target="_blank" rel="noreferrer">Google Maps ↗</a>${shop.sourceUrl ? `<a href="${escapeHtml(shop.sourceUrl)}" target="_blank" rel="noreferrer">Sito / prenota ↗</a>` : ''}</div>
-              ${leg ? `<a class="shopping-leg" href="${escapeHtml(shoppingDirections([previous,shop],leg.mode))}" target="_blank" rel="noreferrer">${leg.mode==='transit' ? 'Con i mezzi' : 'A piedi'} da ${escapeHtml(previous.name)} ↗</a>` : ''}</li>`;
-          }).join('')}</ol>
+          <ol class="shopping-list">${shops.map((shop,index) => shoppingStopHtml(shopping,route,shop,`${route.prefix}${index+1}`)).join('')}</ol>
           ${completeRoute !== '#' ? `<div class="shopping-actions"><a href="${escapeHtml(completeRoute)}" target="_blank" rel="noreferrer">Apri percorso completo ↗</a></div>` : ''}
           ${chunks.length ? `<div class="shopping-actions">${chunks.map((chunk,i)=>`<a href="${escapeHtml(shoppingDirections(chunk))}" target="_blank" rel="noreferrer">Apri tratto ${i+1} · ${route.prefix}${i*4+1}–${route.prefix}${i*4+chunk.length} ↗</a>`).join('')}</div>` : ''}
         </details>
+        ${route.optionalStopIds?.length ? `<details><summary>${route.optionalStopIds.length} bonus opzionali</summary><ol class="shopping-list">${route.optionalStopIds.map((id,index) => shoppingStopHtml(shopping,route,shopping.shops.find(shop=>shop.id===id),`${route.prefix}+${index+1}`,true)).join('')}</ol></details>` : ''}
       </article>`;
     }).join('')}
     <p class="shopping-note">Le linee collegano le tappe in ordine, non seguono le strade. Per camminare o prendere i mezzi, apri i collegamenti Google Maps.</p>

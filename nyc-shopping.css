@@ -61,3 +61,6 @@
   .shopping-map-control small, .map-controls .map-status { display: none; }
   .map-card { max-height: 42%; overflow-y: auto; }
 }
+
+.map-card { max-height: min(65%, 520px); overflow-y: auto; }
+.map-card .shopping-note { font-size: 14px; line-height: 1.45; }

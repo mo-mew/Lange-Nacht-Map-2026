@@ -2,23 +2,23 @@ import {readFileSync} from 'node:fs';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
-import {routeShops,walkingChunks,shoppingDirections,shoppingHtml,shopBadge,ensureTailoringRoute} from '../nyc-shopping.js';
+import {routeShops,walkingChunks,shoppingDirections,shoppingHtml,shopBadge,ensureTailoringRoute,routePinShops,shopDetails,prepareShopping} from '../nyc-shopping.js';
 
 const plan = JSON.parse(readFileSync(new URL('../data/nyc-itinerary.json',import.meta.url),'utf8'));
 const shopping = ensureTailoringRoute(plan.shopping);
 
-test('all saved stores occur once across three independent shopping routes', () => {
-  assert.equal(shopping.shops.length,16);
-  assert.equal(shopping.shops.filter(s=>s.secondHand).length,5);
+test('four routes share one resale shop without duplicating saved places', () => {
+  assert.equal(shopping.shops.length,23);
+  assert.equal(shopping.shops.filter(s=>s.secondHand).length,6);
   assert.equal(shopping.shops.filter(s=>s.tailoring).length,3);
-  assert.equal(shopping.routes.length,3);
-  const ids = shopping.routes.flatMap(r=>r.stopIds);
-  assert.equal(new Set(ids).size,16);
-  assert.deepEqual([...ids].sort(),shopping.shops.map(s=>s.id).sort());
-  assert.deepEqual(shopping.routes.map(r=>r.stopIds.length),[9,4,3]);
+  assert.equal(shopping.routes.length,4);
+  const ids = shopping.routes.flatMap(r=>[...r.stopIds,...(r.optionalStopIds || [])]);
+  assert.equal(new Set(ids).size,23);
+  assert.deepEqual([...new Set(ids)].sort(),shopping.shops.map(s=>s.id).sort());
+  assert.deepEqual(shopping.routes.map(r=>r.stopIds.length),[9,4,3,6]);
   for (const s of shopping.shops) {
-    assert.ok(s.lat>40.71 && s.lat<40.79 && s.lng>-74.01 && s.lng<-73.95);
-    assert.match(s.address, /, New York, NY 100\d\d$/);
+    assert.ok(s.lat>40.71 && s.lat<40.81 && s.lng>-74.01 && s.lng<-73.93);
+    assert.match(s.address, /, New York, NY 10\d\d\d$/);
     if (!s.tailoring) assert.equal(s.secondHand,s.type.startsWith('Second hand'));
     assert.ok(!plan.days.flatMap(d=>d.stops).some(stop=>stop.name===s.name));
   }
@@ -75,9 +75,9 @@ test('shopping view exposes types, addresses, map actions, appointment notes and
     assert.ok(html.includes(shop.appointment));
     assert.ok(html.includes(shop.sourceUrl));
   }
-  assert.ok(html.includes('16 posti'));
+  assert.ok(html.includes('23 posti'));
   assert.ok(html.includes('3 sartorie'));
-  assert.ok(html.includes('3 percorsi'));
+  assert.ok(html.includes('4 percorsi'));
   assert.ok(html.includes('Apri percorso completo'));
   assert.ok(html.includes('is-secondhand'));
   assert.ok(html.includes('is-new'));
@@ -92,7 +92,7 @@ test('shopping layers coexist with visits, toggle cleanly, and retain marker typ
   };
   const layer = () => ({items:[],clearLayers(){this.items=[];}});
   const marker = (point,options) => ({point,options,on(){return this;},addTo(target){target.items.push(this);return this;},setIcon(icon){this.options.icon=icon;},getLatLng(){return point;}});
-  const sandbox = {Map,Intl,Date,Number,URL,routeShops,shopBadge,shoppingHtml,
+  const sandbox = {Map,Intl,Date,Number,URL,routeShops,routePinShops,shopBadge,shopDetails,shoppingHtml,prepareShopping,
     document:{querySelector:element,querySelectorAll:()=>[]},matchMedia:()=>({matches:false}),
     L:{marker,divIcon:options=>options,polyline:marker,DomEvent:{stopPropagation(){}}}};
   vm.createContext(sandbox);
@@ -100,22 +100,54 @@ test('shopping layers coexist with visits, toggle cleanly, and retain marker typ
   vm.runInContext(source,sandbox);
   sandbox.plan=plan;
   sandbox.markerLayer=layer();sandbox.routeLayer=layer();
-  vm.runInContext(`state.data=plan;state.selectedDate='2026-09-11';state.map={fitBounds(){},setView(){}};state.markerLayer=markerLayer;state.routeLayer=routeLayer;renderMapDay();renderMapDay();`,sandbox);
+  vm.runInContext(`state.data=plan;state.selectedDate='2026-09-11';state.map={fitBounds(){},setView(){}};state.markerLayer=markerLayer;state.routeLayer=routeLayer;renderMapDay();`,sandbox);
   const run = code => vm.runInContext(code,sandbox);
-  assert.equal(run('state.markerByKey.size'),21);
+  assert.equal(run('state.markerByKey.size'),28);
   assert.equal(sandbox.routeLayer.items.length,1);
   run("setShoppingRoute('downtown')");
   assert.equal(sandbox.routeLayer.items.length,2);
   run("selectStopOnMap('shop:realreal',state.data.shopping.shops.find(s=>s.id==='realreal'),2);closeMapCard();");
   assert.match(run("state.markerByKey.get('shop:realreal').marker.options.icon.html"),/is-secondhand/);
+  assert.equal(sandbox.markerLayer.items.length,28, 'shared RealReal has only one physical marker');
+  run("setShoppingRoute('cowboy')");
+  assert.equal(run("state.markerByKey.get('shop:realreal').label"),'D3');
+  assert.ok(run("state.markerByKey.has('shop:arial-7')"));
+  assert.equal(sandbox.routeLayer.items[1].point.length,6, 'bonus shops stay off the route line');
+  assert.equal(sandbox.markerLayer.items.length,28);
+  run("setShoppingRoute('downtown')");
+  assert.equal(run("state.markerByKey.get('shop:realreal').label"),'A3');
   run('setShoppingPins(false)');
   assert.equal(run('state.markerByKey.size'),5);
   assert.equal(sandbox.routeLayer.items.length,1);
   assert.equal(run('state.shoppingRoute'),null);
   run("setShoppingRoute('tailoring')");
-  assert.equal(run('state.markerByKey.size'),21);
+  assert.equal(run('state.markerByKey.size'),28);
   assert.equal(sandbox.routeLayer.items.length,2);
   assert.ok(run("state.markerByKey.has('shop:michael-andrews')"));
   run("state.selectedDate='2026-09-13';renderMapDay()");
-  assert.equal(run('state.markerByKey.size'),19);
+  assert.equal(run('state.markerByKey.size'),26);
+});
+
+
+test('cowboy route follows the requested priorities with two optional detours', () => {
+  const route = shopping.routes.find(r=>r.id==='cowboy');
+  assert.equal(route.prefix,'D');
+  assert.deepEqual(route.stopIds,['tecovas','double-rl','realreal','kemo-sabe','bergdorf-men','azteca']);
+  assert.deepEqual(route.optionalStopIds,['wgaca','arial-7']);
+  assert.equal(routeShops(shopping,'cowboy').length,6);
+  assert.equal(routePinShops(shopping,'cowboy').length,8);
+  assert.equal(shopping.shops.filter(s=>s.id==='realreal').length,1);
+  assert.ok(shopping.shops.find(s=>s.id==='arial-7').appointment);
+  assert.ok(!shopping.shops.some(s=>/Space Cowboy|Western Spirit/i.test(s.name)));
+  const html=shoppingHtml(shopping,'cowboy',true);
+  assert.match(html,/2 bonus opzionali/);
+  assert.match(html,/niente square o round toe/);
+  const popup=shopping.shops.find(s=>s.id==='kemo-sabe');
+  assert.ok(!shopDetails(popup,'','2026-09-13').includes('Pop-up terminato'));
+  assert.ok(!shopDetails(popup,'','2026-09-27').includes('Pop-up terminato'));
+  assert.ok(shopDetails(popup,'','2026-09-28').includes('Pop-up terminato'));
+  const count=shopping.shops.length;
+  prepareShopping(shopping);prepareShopping(shopping);
+  assert.equal(shopping.shops.length,count);
+  assert.equal(shopping.routes.length,4);
 });

@@ -1,4 +1,4 @@
-import { routeShops, shopBadge, shoppingHtml } from './nyc-shopping.js';
+import { routeShops, routePinShops, shopBadge, shopDetails, shoppingHtml, prepareShopping } from './nyc-shopping.js';
 
 const DATA_URL = 'data/nyc-itinerary.json';
 const NYC_CENTER = [40.7580, -73.9855];
@@ -155,7 +155,7 @@ function dayDetailHtml(day) {
   const isToday = day.date === nycTodayISO();
   return `
     <div class="day-detail">
-      <button type="button" class="shopping-shortcut" data-open-shopping><strong>Shopping, quando vuoi</strong><span>${day.date === state.data.shopping?.date ? '9 negozi tra SoHo e Lower East Side' : '13 negozi salvati · 2 percorsi'} <b>›</b></span></button>
+      <button type="button" class="shopping-shortcut" data-open-shopping><strong>Shopping, quando vuoi</strong><span>${state.data.shopping?.shops.length || 0} posti salvati · ${state.data.shopping?.routes.length || 0} percorsi <b>›</b></span></button>
       <header class="day-hero">
         <p>${escapeHtml(day.weekday)} ${escapeHtml(dayNumberLabel(day))}${isToday ? ' · OGGI' : ''}</p>
         <h1>${escapeHtml(day.title)}</h1>
@@ -370,10 +370,13 @@ function iconForEntry(entry, selected = false) {
 function renderShoppingMap() {
   const shopping = state.data.shopping;
   if (!shopping) return;
-  if (state.showShoppingPins) shopping.routes.forEach(route => {
-    routeShops(shopping,route.id).forEach((shop,index) => {
+  const routes = [...shopping.routes].sort((a,b) => Number(b.id === state.shoppingRoute) - Number(a.id === state.shoppingRoute));
+  if (state.showShoppingPins) routes.forEach(route => {
+    routePinShops(shopping,route.id).forEach((shop,index) => {
       const key = `shop:${shop.id}`;
-      const entry = {shop:true,stop:shop,index,label:`${route.prefix}${index+1}`};
+      if (state.markerByKey.has(key)) return;
+      const label = index < route.stopIds.length ? `${route.prefix}${index+1}` : `${route.prefix}+${index-route.stopIds.length+1}`;
+      const entry = {shop:true,stop:shop,index,label,routeNote:route.stopNotes?.[shop.id]};
       const marker = L.marker([shop.lat,shop.lng], {icon:iconForEntry(entry),title:`${entry.label} · ${shop.name} · ${shop.type}`,zIndexOffset:100});
       entry.marker = marker;
       marker.on('click', event => { L.DomEvent.stopPropagation(event); selectStopOnMap(key,shop,index); });
@@ -408,7 +411,7 @@ function setShoppingRoute(routeId) {
 function shoppingMapCard(entry) {
   const shop = entry.stop;
   return `<div class="map-card-head"><div><small>Shopping ${entry.label} · sosta opzionale</small><h2>${escapeHtml(shop.name)}</h2></div><button type="button" data-close-map aria-label="Chiudi">×</button></div>
-    ${shopBadge(shop)}<p>${escapeHtml(shop.address)}</p>
+    ${shopBadge(shop)}<p>${escapeHtml(shop.address)}</p>${shopDetails(shop,entry.routeNote)}
     <div class="map-card-actions"><a href="${mapsLink(shop.mapsQuery)}" target="_blank" rel="noreferrer">Negozio e orari su Google Maps ↗</a></div>`;
 }
 
@@ -592,6 +595,7 @@ async function main() {
     const response = await fetch(DATA_URL, { cache: 'no-store' });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     state.data = await response.json();
+    prepareShopping(state.data.shopping);
     state.selectedDate = chooseInitialDate();
 
     els.tripTitle.textContent = state.data.title;
