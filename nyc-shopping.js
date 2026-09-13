@@ -83,8 +83,8 @@ function patchShoppingChrome(shopping) {
     if (!select || select.querySelector(`option[value="${route.id}"]`)) continue;
     const option = document.createElement('option');
     option.value = route.id;
-    option.textContent = `${route.prefix} · ${route.title}`;
-    select.querySelector('option[value="hidden"]')?.before(option);
+    option.textContent = ({cowboy:'Cowboy boots', tailoring:'Sartoria uomo', downtown:'Shopping · SoHo + LES', uptown:'Shopping · Chelsea + Uptown'})[route.id] || route.title;
+    select.append(option);
   }
   const total = shopping?.shops?.length || 16;
   const routes = shopping?.routes?.length || 3;
@@ -177,7 +177,8 @@ export function shoppingHtml(shopping, selectedRoute, showPins) {
       return `<article class="shopping-route${active ? ' is-active' : ''}">
         <div class="shopping-route-heading"><span class="shopping-letter">${route.prefix}</span><div><h2>${escapeHtml(route.title)}</h2><p>${escapeHtml(route.summary)}</p></div></div>
         <p>${escapeHtml(route.description)}</p>
-        <button type="button" class="shopping-route-button" data-shopping-route="${route.id}" aria-pressed="${active}">${active ? 'Percorso attivo · torna ai soli pin' : 'Mostra percorso parallelo'}</button>
+        <button type="button" class="shopping-route-button" data-shopping-route="${route.id}" aria-pressed="${active}">${active ? 'Percorso attivo · torna ai soli pin' : 'Mostra solo questo percorso'}</button>
+        <button type="button" class="shopping-route-button shopping-pins-button" data-shopping-category="${route.id}">Mappa · solo questi pin</button>
         <p class="shopping-connection">${escapeHtml(route.connection)}</p>
         <details ${route.id === (selectedRoute || 'downtown') ? 'open' : ''}><summary>Le ${shops.length} tappe in ordine consigliato</summary>
           <ol class="shopping-list">${shops.map((shop,index) => shoppingStopHtml(shopping,route,shop,`${route.prefix}${index+1}`)).join('')}</ol>

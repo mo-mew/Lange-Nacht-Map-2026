@@ -64,3 +64,8 @@
 
 .map-card { max-height: min(65%, 520px); overflow-y: auto; }
 .map-card .shopping-note { font-size: 14px; line-height: 1.45; }
+
+.shopping-map-control .shopping-route-toggle { display: flex; align-items: center; gap: 8px; min-height: 44px; margin: 4px 0 0; font-size: 14px; font-weight: 500; }
+.shopping-route-toggle input { width: 18px; height: 18px; accent-color: var(--shop-secondhand); }
+.shopping-route-toggle:has(input:disabled) { color: var(--secondary); }
+.shopping-pins-button { margin-top: 8px; border-color: var(--separator); color: var(--text); }

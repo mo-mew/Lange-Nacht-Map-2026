@@ -84,7 +84,7 @@ test('shopping view exposes types, addresses, map actions, appointment notes and
   assert.ok(!shopBadge({type:'<script>',secondHand:false}).includes('<script>'));
 });
 
-test('shopping layers coexist with visits, toggle cleanly, and retain marker types after selection', () => {
+test('map categories isolate cowboy pins, preserve shared shops and fit only visible places', () => {
   const elements = new Map();
   const element = selector => {
     if (!elements.has(selector)) elements.set(selector,{textContent:'',hidden:true,value:'pins',querySelector:()=>null});
@@ -100,32 +100,49 @@ test('shopping layers coexist with visits, toggle cleanly, and retain marker typ
   vm.runInContext(source,sandbox);
   sandbox.plan=plan;
   sandbox.markerLayer=layer();sandbox.routeLayer=layer();
-  vm.runInContext(`state.data=plan;state.selectedDate='2026-09-11';state.map={fitBounds(){},setView(){}};state.markerLayer=markerLayer;state.routeLayer=routeLayer;renderMapDay();`,sandbox);
+  vm.runInContext(`state.data=plan;state.selectedDate='2026-09-11';state.map={fitBounds(points){this.lastBounds=points;},setView(){}};state.markerLayer=markerLayer;state.routeLayer=routeLayer;renderMapDay();`,sandbox);
   const run = code => vm.runInContext(code,sandbox);
-  assert.equal(run('state.markerByKey.size'),28);
-  assert.equal(sandbox.routeLayer.items.length,1);
-  run("setShoppingRoute('downtown')");
-  assert.equal(sandbox.routeLayer.items.length,2);
-  run("selectStopOnMap('shop:realreal',state.data.shopping.shops.find(s=>s.id==='realreal'),2);closeMapCard();");
-  assert.match(run("state.markerByKey.get('shop:realreal').marker.options.icon.html"),/is-secondhand/);
-  assert.equal(sandbox.markerLayer.items.length,28, 'shared RealReal has only one physical marker');
+  assert.equal(run('state.mapCategory'),'cowboy');
+  assert.equal(run('state.markerByKey.size'),8);
+  assert.equal(sandbox.routeLayer.items.length,0);
+  assert.ok(run("[...state.markerByKey.keys()].every(key=>key.startsWith('shop:'))"));
+  assert.ok(!run("state.markerByKey.has('shop:coach')"));
+  run("setMapCategory('cowboy')");
+  assert.equal(run('state.map.lastBounds.length'),8);
+  assert.equal(element('#shoppingMapMode').value,'cowboy');
   run("setShoppingRoute('cowboy')");
   assert.equal(run("state.markerByKey.get('shop:realreal').label"),'D3');
   assert.ok(run("state.markerByKey.has('shop:arial-7')"));
-  assert.equal(sandbox.routeLayer.items[1].point.length,6, 'bonus shops stay off the route line');
-  assert.equal(sandbox.markerLayer.items.length,28);
+  assert.equal(sandbox.routeLayer.items[0].point.length,6, 'bonus shops stay off the route line');
+  assert.equal(sandbox.markerLayer.items.length,8);
+  run("setMapCategory('all')");
+  assert.equal(sandbox.markerLayer.items.length,28,'shared RealReal has only one physical marker');
+  assert.equal(sandbox.routeLayer.items.length,2,'parallel shopping route remains available with all categories');
   run("setShoppingRoute('downtown')");
+  assert.equal(run('state.markerByKey.size'),9);
+  assert.equal(sandbox.routeLayer.items.length,1);
   assert.equal(run("state.markerByKey.get('shop:realreal').label"),'A3');
+  run("selectStopOnMap('shop:realreal',state.data.shopping.shops.find(s=>s.id==='realreal'),2);closeMapCard();");
+  assert.match(run("state.markerByKey.get('shop:realreal').marker.options.icon.html"),/is-secondhand/);
   run('setShoppingPins(false)');
   assert.equal(run('state.markerByKey.size'),5);
   assert.equal(sandbox.routeLayer.items.length,1);
   assert.equal(run('state.shoppingRoute'),null);
   run("setShoppingRoute('tailoring')");
-  assert.equal(run('state.markerByKey.size'),28);
-  assert.equal(sandbox.routeLayer.items.length,2);
+  assert.equal(run('state.markerByKey.size'),3);
+  assert.equal(sandbox.routeLayer.items.length,1);
   assert.ok(run("state.markerByKey.has('shop:michael-andrews')"));
   run("state.selectedDate='2026-09-13';renderMapDay()");
+  assert.equal(run('state.markerByKey.size'),3,'date changes do not remove category isolation');
+  run("setMapCategory('uptown')");
+  assert.equal(run('state.markerByKey.size'),4);
+  run("setMapCategory('visits')");
+  assert.equal(run('state.markerByKey.size'),3);
+  run("setMapCategory('all')");
   assert.equal(run('state.markerByKey.size'),26);
+  run("setMapCategory('invalid')");
+  assert.equal(run('state.mapCategory'),'all');
+
 });
 
 

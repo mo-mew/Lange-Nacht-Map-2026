@@ -28,6 +28,7 @@ const state = {
   data: null,
   showShoppingPins: true,
   shoppingRoute: null,
+  mapCategory: 'cowboy',
   selectedDate: null,
   tab: 'today',
   map: null,
@@ -212,9 +213,17 @@ function renderContent() {
     els.content.querySelectorAll('[data-shopping-route]').forEach(button => button.addEventListener('click', () => {
       setShoppingRoute(state.shoppingRoute === button.dataset.shoppingRoute ? null : button.dataset.shoppingRoute);
     }));
+    els.content.querySelectorAll('[data-shopping-category]').forEach(button => button.addEventListener('click', () => {
+      setMapCategory(button.dataset.shoppingCategory);
+      setTab('map');
+    }));
     els.content.querySelectorAll('[data-shop-focus]').forEach(button => button.addEventListener('click', () => {
-      if (!state.showShoppingPins) setShoppingPins(true);
-      focusStop(`shop:${button.dataset.shopFocus}`);
+      const key = `shop:${button.dataset.shopFocus}`;
+      if (!state.markerByKey.has(key)) {
+        const routeId = button.closest('.shopping-route')?.querySelector('[data-shopping-category]')?.dataset.shoppingCategory;
+        setMapCategory(routeId || 'all');
+      }
+      focusStop(key);
     }));
     return;
   }
@@ -282,7 +291,7 @@ function renderMapDay({ fit = false } = {}) {
   closeMapCard();
 
   const points = [];
-  day.stops.forEach((stop, index) => {
+  if (['all','visits'].includes(state.mapCategory)) day.stops.forEach((stop, index) => {
     if (!Number.isFinite(stop.lat) || !Number.isFinite(stop.lng)) return;
     const key = `${day.date}:${index}`;
     const marker = L.marker([stop.lat, stop.lng], { icon: markerIcon(index), title: stop.name });
@@ -300,13 +309,13 @@ function renderMapDay({ fit = false } = {}) {
   }
 
   renderShoppingMap();
-  if (fit && points.length) fitDayAndUser();
+  if (fit) fitDayAndUser();
 }
 
 function fitDayAndUser(dayPoints = null) {
   if (!state.map) return;
   const day = currentDay();
-  const points = dayPoints || (state.shoppingRoute ? routeShops(state.data.shopping,state.shoppingRoute) : day.stops).filter(stop => Number.isFinite(stop.lat) && Number.isFinite(stop.lng)).map(stop => [stop.lat, stop.lng]);
+  const points = dayPoints || [...state.markerByKey.values()].map(({stop}) => [stop.lat, stop.lng]);
   const boundsPoints = [...points];
   if (state.userLocation && distanceKm(state.userLocation, { lat: NYC_CENTER[0], lng: NYC_CENTER[1] }) < 80) {
     boundsPoints.push([state.userLocation.lat, state.userLocation.lng]);
@@ -352,6 +361,7 @@ function closeMapCard() {
 }
 
 function focusStop(key) {
+  if (!state.markerByKey.has(key) && !key.startsWith('shop:')) setMapCategory('visits');
   const target = state.markerByKey.get(key);
   if (!target || !state.map) return;
   if (mobileMedia.matches) setTab('map');
@@ -370,7 +380,7 @@ function iconForEntry(entry, selected = false) {
 function renderShoppingMap() {
   const shopping = state.data.shopping;
   if (!shopping) return;
-  const routes = [...shopping.routes].sort((a,b) => Number(b.id === state.shoppingRoute) - Number(a.id === state.shoppingRoute));
+  const routes = shopping.routes.filter(route => state.mapCategory === 'all' || route.id === state.mapCategory).sort((a,b) => Number(b.id === state.shoppingRoute) - Number(a.id === state.shoppingRoute));
   if (state.showShoppingPins) routes.forEach(route => {
     routePinShops(shopping,route.id).forEach((shop,index) => {
       const key = `shop:${shop.id}`;
@@ -388,21 +398,34 @@ function renderShoppingMap() {
     const points = routeShops(shopping,state.shoppingRoute).map(shop=>[shop.lat,shop.lng]);
     L.polyline(points,{color:'#8050b9',weight:4,opacity:0.8,dashArray:'4 9',interactive:false}).addTo(state.routeLayer);
   }
-  $('#shoppingMapMode').value = !state.showShoppingPins ? 'hidden' : state.shoppingRoute || 'pins';
-  els.fitButton.textContent = state.shoppingRoute ? 'Vedi shopping' : 'Vedi giornata';
-  $('#shoppingMapNote').textContent = state.shoppingRoute ? 'Percorso shopping parallelo · linea indicativa' : 'Soste shopping opzionali';
+  $('#shoppingMapMode').value = state.mapCategory;
+  const route = shopping.routes.find(route => route.id === state.mapCategory);
+  const lineToggle = $('#shoppingRouteLine');
+  lineToggle.checked = Boolean(state.shoppingRoute);
+  lineToggle.disabled = !route && !state.shoppingRoute;
+  els.fitButton.textContent = 'Vedi pin visibili';
+  const count = state.markerByKey.size;
+  $('#shoppingMapNote').textContent = `${count} pin · ${route ? route.title : state.mapCategory === 'visits' ? 'Visite del giorno' : 'Tutte le categorie'}${state.shoppingRoute ? ' · linea indicativa' : ''}`;
+  document.querySelector('.shopping-map-control .legend-day').hidden = !['all','visits'].includes(state.mapCategory);
 }
 
-function setShoppingPins(show) {
-  state.showShoppingPins = show;
-  if (!show) state.shoppingRoute = null;
-  renderMapDay();
+function setMapCategory(category) {
+  const valid = ['all','visits',...(state.data?.shopping?.routes || []).map(route=>route.id)];
+  state.mapCategory = valid.includes(category) ? category : 'all';
+  if (state.mapCategory !== 'all') state.shoppingRoute = null;
+  state.showShoppingPins = state.mapCategory !== 'visits';
+  renderMapDay({fit:true});
   if (state.tab === 'shopping') renderContent();
 }
 
+function setShoppingPins(show) {
+  setMapCategory(show ? (state.mapCategory === 'visits' ? 'all' : state.mapCategory) : 'visits');
+}
+
 function setShoppingRoute(routeId) {
+  if (routeId) state.mapCategory = routeId;
   state.shoppingRoute = routeId;
-  state.showShoppingPins = true;
+  state.showShoppingPins = state.mapCategory !== 'visits';
   renderMapDay({fit:true});
   if (state.tab === 'shopping') renderContent();
   if (mobileMedia.matches && routeId && state.map) setTab('map');
@@ -576,12 +599,8 @@ function bindStaticActions() {
     if (mobileMedia.matches) setTab('map');
   });
   els.locateButton.addEventListener('click', centerOnUser);
-  $('#shoppingMapMode').addEventListener('change', event => {
-    const value = event.target.value;
-    if (value === 'hidden') setShoppingPins(false);
-    else if (value === 'pins') { state.showShoppingPins = true; setShoppingRoute(null); }
-    else setShoppingRoute(value);
-  });
+  $('#shoppingMapMode').addEventListener('change', event => setMapCategory(event.target.value));
+  $('#shoppingRouteLine').addEventListener('change', event => setShoppingRoute(event.target.checked ? state.mapCategory : null));
   els.fitButton.addEventListener('click', () => fitDayAndUser());
   mobileMedia.addEventListener?.('change', () => requestAnimationFrame(() => state.map?.invalidateSize()));
 }
